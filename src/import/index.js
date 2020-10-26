@@ -1,12 +1,11 @@
-import specToHex from './export/specToHex'
-import specToHexFixLimit from './export/specToHexFixLimit'
-import gradientsToHexArrays from './export/gradientsToHexArrays' // eslint-disable-line
-
-import hexToSpec from './import/hexToSpec'
+import channelsToSpec from './channelsToSpec'
+import hexToChannels from './hexToChannels'
+import hexToSpec from './hexToSpec'
+import hueToRelativeChannels from './hueToRelativeChannels'
 
 export {
-  specToHex,
-  specToHexFixLimit,
-  gradientsToHexArrays,
+  channelsToSpec,
+  hexToChannels,
   hexToSpec,
+  hueToRelativeChannels,
 }

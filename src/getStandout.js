@@ -1,4 +1,4 @@
-import hexToSpec from "./import/hexToSpec"
+import hexToSpec from './import/hexToSpec'
 
 export default hex => {
   const { lum } = hexToSpec(hex)

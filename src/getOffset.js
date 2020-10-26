@@ -1,10 +1,10 @@
-import hexToSpec from "./import/hexToSpec"
-import specToHex from "./export/specToHex"
+import hexToSpec from './import/hexToSpec'
+import specToHex from './export/specToHex'
 
 export default ({
   hex,
   tuner,
-  offsets,
+  offsets
 }) => {
   const originSpec = hexToSpec(hex)
   const changes = {}
@@ -19,7 +19,7 @@ export default ({
     ...originSpec,
     ...changes,
     prefer: 'lum',
-    tuner,
+    tuner
   })
   return newHex
 }

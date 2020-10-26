@@ -1,15 +1,53 @@
-import hexToSpec from './import/hexToSpec'
-import specToHex from './export/specToHex'
-import specToHexFixLimit from './export/specToHexFixLimit'
-import gradientsToHexArrays from './export/gradientsToHexArrays' // eslint-disable-line
 import getStandout from './getStandout.js'
 import getOffset from './getOffset.js'
-
-export {
+import {
+  channelsToSpec,
+  hexToChannels,
   hexToSpec,
-  getStandout,
-  getOffset,
+  hueToRelativeChannels,
+} from './import'
+import {
   specToHex,
   specToHexFixLimit,
   gradientsToHexArrays,
+} from './export'
+import {
+  maxSatForHueFromTuner,
+  hueFromChannels,
+  satFromChannels,
+  lumFromChannels,
+  inherentLumFromHue,
+}  from './solveFor'
+import {
+  funnel, 
+  interpolate, 
+  wrapAround, 
+  validateHex
+} from './utils'
+import { 
+  HUE_STRUCTURES, 
+  CHANNEL_SPECIFIC_LUM 
+} from './constants'
+export {
+  getStandout,
+  getOffset,
+  channelsToSpec,
+  hexToChannels,
+  hexToSpec,
+  hueToRelativeChannels,
+  specToHex,
+  specToHexFixLimit,
+  gradientsToHexArrays,
+  maxSatForHueFromTuner,
+  hueFromChannels,
+  satFromChannels,
+  lumFromChannels,
+  inherentLumFromHue,
+  funnel, 
+  interpolate, 
+  wrapAround, 
+  validateHex,
+  HUE_STRUCTURES, 
+  CHANNEL_SPECIFIC_LUM,
 }
+
