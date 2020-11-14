@@ -35,7 +35,7 @@ import {
 } from './constants'
 import {
   builtInTunerKit,
-  templates,
+  schemes,
 } from './preconfig'
 
 export {
@@ -63,5 +63,5 @@ export {
   HUE_STRUCTURES,
   CHANNEL_SPECIFIC_LUM,
   builtInTunerKit,
-  templates,
+  schemes,
 }

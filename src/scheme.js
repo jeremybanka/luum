@@ -268,6 +268,6 @@ export default function makeColorSchemesFromHexes({ hexes, scheme, tuner }) {
     palettes = [...palettes, ...newPalettes]
   }
   const scss = makeScssObject(palettes, tuner)
-  // console.log(scss)
+  console.log(scss)
   return scss
 }

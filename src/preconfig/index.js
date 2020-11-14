@@ -1,7 +1,7 @@
 import builtInTunerKit from './builtInTunerKit'
-import templates from './templates'
+import schemes from './schemes'
 
 export {
   builtInTunerKit,
-  templates,
+  schemes,
 }
