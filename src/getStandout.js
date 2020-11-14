@@ -7,3 +7,6 @@ export default hex => {
     : 'white'
   return standOut
 }
+
+// input: red
+// hard standout: white

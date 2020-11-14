@@ -33,12 +33,14 @@
     "core-js": "^3.6.5",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "latest",
-    "eslint": "6.4.0",
+    "eslint": "^7.0.0",
+    "eslint-config-airbnb": "^18.2.0",
     "eslint-config-defaults": "latest",
     "eslint-config-prettier": "6.3.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-babel": "latest",
     "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-node": "10.0.0",
     "eslint-plugin-prettier": "3.1.1",
     "eslint-plugin-promise": "latest",
@@ -91,5 +93,6 @@
   "bugs": {
     "url": "https://github.com/jeremybanka/luum/issues"
   },
-  "homepage": "https://github.com/jeremybanka/luum#readme"
+  "homepage": "https://github.com/jeremybanka/luum#readme",
+  "dependencies": {}
 }

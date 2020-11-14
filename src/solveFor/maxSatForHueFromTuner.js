@@ -12,14 +12,14 @@ export default (hue, tuner) => {
       hue < tuningPointB.hue
     ) {
       // console.log('||| hue', hue, 'is between', tuningPointA.hue, 'and', tuningPointB.hue)
-      let _ = hue // 70
-      _ -= tuningPointA.hue // 70 - 50 = 20
-      _ /= tuningPointB.hue - tuningPointA.hue // 20 / (120 - 50) = 2/7
-      _ *= tuningPointB.sat - tuningPointA.sat // -128 * 2 / 7 = -256 / 7 ~= -37
-      _ += tuningPointA.sat
-      Math.round(_)
+      let $ = hue // 70
+      $ -= tuningPointA.hue // 70 - 50 = 20
+      $ /= tuningPointB.hue - tuningPointA.hue // 20 / (120 - 50) = 2/7
+      $ *= tuningPointB.sat - tuningPointA.sat // -128 * 2 / 7 = -256 / 7 ~= -37
+      $ += tuningPointA.sat
+      Math.round($)
       // console.log('||| _', _)
-      maxSat = _
+      maxSat = $
     }
   }
   // console.log('--- maxSat', maxSat)

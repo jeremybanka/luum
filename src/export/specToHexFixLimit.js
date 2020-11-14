@@ -1,4 +1,4 @@
-import specToChannels from "./specToChannels"
+import specToChannels from "./specToChannelsFixLimit"
 import channelsToHex from "./channelsToHex"
 
 export default ({ hue, sat, lum, prefer, tuner }) => {

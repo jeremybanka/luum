@@ -1,5 +1,10 @@
-import getStandout from './getStandout.js'
-import getOffset from './getOffset.js'
+import scheme from './scheme'
+import getStandout from './getStandout'
+import getOffset from './getOffset'
+import {
+  softContrast,
+  hardContrast,
+} from './contrast'
 import {
   channelsToSpec,
   hexToChannels,
@@ -16,21 +21,29 @@ import {
   hueFromChannels,
   satFromChannels,
   lumFromChannels,
-  inherentLumFromHue,
+  specificLumFromHue,
 }  from './solveFor'
 import {
-  funnel, 
-  interpolate, 
-  wrapAround, 
-  validateHex
+  funnel,
+  interpolate,
+  wrapAround,
+  validateHex,
 } from './utils'
-import { 
-  HUE_STRUCTURES, 
-  CHANNEL_SPECIFIC_LUM 
+import {
+  HUE_STRUCTURES,
+  CHANNEL_SPECIFIC_LUM,
 } from './constants'
+import {
+  builtInTunerKit,
+  templates,
+} from './preconfig'
+
 export {
+  scheme,
   getStandout,
   getOffset,
+  softContrast,
+  hardContrast,
   channelsToSpec,
   hexToChannels,
   hexToSpec,
@@ -42,12 +55,13 @@ export {
   hueFromChannels,
   satFromChannels,
   lumFromChannels,
-  inherentLumFromHue,
-  funnel, 
-  interpolate, 
-  wrapAround, 
+  specificLumFromHue,
+  funnel,
+  interpolate,
+  wrapAround,
   validateHex,
-  HUE_STRUCTURES, 
+  HUE_STRUCTURES,
   CHANNEL_SPECIFIC_LUM,
+  builtInTunerKit,
+  templates,
 }
-

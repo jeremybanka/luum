@@ -1,7 +1,7 @@
-import calibrationSheets from './calibrationSheets'
 import builtInTunerKit from './builtInTunerKit'
+import templates from './templates'
 
 export {
-  calibrationSheets,
   builtInTunerKit,
+  templates,
 }
