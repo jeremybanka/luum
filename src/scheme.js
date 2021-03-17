@@ -2,13 +2,15 @@ import { specToHex } from './export'
 import { hexToSpec } from './import'
 import { specificLumFromHue } from './solveFor'
 
-function mixPalettes({
+export function mixPalettes({
   palettes,
   hexes,
   ops,
   place: [paletteIdx, stateKey, elementKey] = [0, null, null],
 }) {
-  let palettes_ = [...palettes] || []
+  if(!Array.isArray(palettes) || palettes.length === 0) throw new Error('Must provide at least one palette')
+
+  let palettes_ = [...palettes]
   const palette = palettes_[paletteIdx]
   const state = stateKey
     ? palette.states[stateKey]
@@ -17,9 +19,10 @@ function mixPalettes({
     ? state.elements[elementKey]
     : null
   const destination = element || state || palette
-  const origin = element
-    ? state
-    : palette
+  const origin = element ? state : palette
+
+  if(!origin && hexes.length === 0) throw new Error('Must provide at least one hex')
+
   if(!origin.color) origin.color = hexToSpec(hexes[0])
   let color  = { ...origin.color }
 
@@ -70,13 +73,17 @@ function mixPalettes({
         break
       case 'contrast':
         switch(value) {
-          case 'hard': color.lum = color.lum > 0.5
+          case 'hard': color.lum = color.lum > 0.67
             ? 0
             : 1
             break
-          case 'soft': color.lum = color.lum > 0.5
+          case 'soft': color.lum = color.lum > 0.67
             ? 0.05
             : 0.95
+            break
+          case 'harden': color.lum = color.lum > 0.67
+            ? 0
+            : 1
             break
           default: throw new Error(`'contrast' accepts 'hard' or 'soft'; got '${value}'`)
         }
@@ -247,15 +254,11 @@ function makeScssObject(palettes, tuner) {
   return scssObject
 }
 
-const stateTemplate = name => ({
-  id: name,
-  elements: {},
-})
 const paletteTemplate = name => ({
   id: name,
-  states: { base: stateTemplate('base') },
+  states: { base: { elements: {} } },
 })
-export default function makeColorSchemesFromHexes({ hexes, scheme, tuner }) {
+export default function makeColorPalettesFromHexes({ hexes, scheme, tuner }) {
   const schemeEntries = Object.entries(scheme)
   let palettes = []
   for(let idx = 0; idx < schemeEntries.length; idx++) {
@@ -268,6 +271,6 @@ export default function makeColorSchemesFromHexes({ hexes, scheme, tuner }) {
     palettes = [...palettes, ...newPalettes]
   }
   const scss = makeScssObject(palettes, tuner)
-  console.log(scss)
+  // console.log(scss)
   return scss
 }

@@ -5,11 +5,13 @@ const miniHexToHex = miniHex => {
 }
 
 export default {
-  acceptLengths: [6, 3],
   proto: '[a-fA-F0-9]+',
-  test(string) {
+  draft(string) {
     const r = new RegExp(`^${this.proto}$`)
-    return r.test(string)
+    return (r.test(string) && string.length <= 6)
+  },
+  final(string) {
+    return (string.length === 3 || string.length === 6)
   },
   exec(string) {
     const r = new RegExp(this.proto)

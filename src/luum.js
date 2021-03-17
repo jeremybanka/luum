@@ -23,6 +23,7 @@ import {
   lumFromChannels,
   specificLumFromHue,
 }  from './solveFor'
+import nameHue from './identify/nameHue'
 import {
   funnel,
   interpolate,
@@ -56,6 +57,7 @@ export {
   satFromChannels,
   lumFromChannels,
   specificLumFromHue,
+  nameHue,
   funnel,
   interpolate,
   wrapAround,

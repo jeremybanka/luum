@@ -5,11 +5,13 @@ function interpolateChanges(rootSpec, currentStep, axes) {
   const changes = {}
   for(let axisIdx = 0; axisIdx < axes.length; axisIdx++) {
     const currentAxis = axes[axisIdx]
-    const { attribute } = currentAxis
+    const { attribute, relative } = currentAxis
+    const rootValue = rootSpec[attribute]
     const to = () => {
       switch(typeof currentAxis.to) {
         case 'number':
-          return currentAxis.to
+          if(!relative) return currentAxis.to
+          return rootValue + currentAxis.to
         case 'function':
           return currentAxis.to(rootSpec[attribute])
         default: throw new Error((
@@ -26,7 +28,8 @@ function interpolateChanges(rootSpec, currentStep, axes) {
         case 'undefined':
           return rootSpec[attribute]
         case 'number':
-          return currentAxis.from
+          if(!relative) return currentAxis.from
+          return rootValue + currentAxis.from
         case 'function':
           return currentAxis.from(rootSpec[attribute])
         default: throw new Error((

@@ -7,7 +7,7 @@
     "build": "babel-node tasks/buildAll.js",
     "build-node": "babel-node tasks/buildNode.js",
     "build-global": "babel-node tasks/buildGlobal.js",
-    "jest": "jest",
+    "jest": "jest --watchAll",
     "test": "jest --coverage",
     "docs": "esdoc -c docs/index.js",
     "site": "cp -r site/** build/",
