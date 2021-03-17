@@ -30,7 +30,7 @@ const rangeNames = [
 ]
 
 export default hue => {
-  console.log('||| hue', hue)
+  // console.log('||| hue', hue)
   const hueWrapped = wrapAround(hue, [0, 360])
   for(let a = -1, b = 0; b < rangeNames.length; a++, b++) {
     a = wrapAround(a, [0, rangeNames.length])
@@ -42,10 +42,12 @@ export default hue => {
     if(
       (hueDoubleWrapped || hueWrapped) >= hueA &&
       (hueDoubleWrapped || hueWrapped) < hueB) {
+      /*
       console.log('||| hue', hue,
         'is between', namingPointA.hue,
         'and', namingPointB.hue,
         'therefore it is named', namingPointA.name)
+      */
       return namingPointA.name
     }
   }
