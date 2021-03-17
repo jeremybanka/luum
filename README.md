@@ -2,6 +2,7 @@
 
 ## Technologies Used
 
+* ES6
 * Jest for testing
 * Prettier and Eslint (airbnb style) for formatting
 
