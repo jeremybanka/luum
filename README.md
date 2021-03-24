@@ -34,4 +34,4 @@ MIT
 
 ## Contact Information
 
-jeremybanka@fake-email.com
+hello (at) jeremybanka (dot) com
