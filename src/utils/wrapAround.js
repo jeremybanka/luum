@@ -1,5 +1,6 @@
 export default function wrapAround(value, [min, max]) {
-  while(value >= max) value -= (max - min)
-  while(value < min) value += (max - min)
+  const range = max - min
+  while(value >= max) value -= range
+  while(value < min) value += range
   return value
 }

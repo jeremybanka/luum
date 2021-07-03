@@ -1,23 +1,29 @@
+const BASE_16_CHAR_SET = '[a-fA-F0-9]+'
+
 const miniHexToHex = miniHex => {
   const miniHexArray = miniHex.split('')
   const hexTemplate = [0, 0, 1, 1, 2, 2]
   return (hexTemplate.map(idx => miniHexArray[idx]).join(''))
 }
 
+export function parseHex(mightContainHex) {
+  return mightContainHex
+}
+
 export default {
-  proto: '[a-fA-F0-9]+',
-  draft(string) {
-    const r = new RegExp(`^${this.proto}$`)
+  base16CharSet: '[a-fA-F0-9]+',
+  hexec(string) {
+    const r = new RegExp(BASE_16_CHAR_SET)
+    return r.exec(string) ? r.exec(string)[0] : null
+  },
+  hexIsValidDraft(string) {
+    const r = new RegExp(`^${BASE_16_CHAR_SET}$`)
     return (r.test(string) && string.length <= 6)
   },
-  final(string) {
+  hexIsValid(string) {
     return (string.length === 3 || string.length === 6)
   },
-  exec(string) {
-    const r = new RegExp(this.proto)
-    return r.exec(string)[0]
-  },
-  process(input) {
+  parse(input) {
     const hex = this.exec(input)
     switch(hex.length) {
       case 6: return (`#${hex}`)

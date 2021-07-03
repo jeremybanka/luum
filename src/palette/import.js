@@ -1,15 +1,12 @@
-import { specToHex } from './export'
-import { hexToSpec } from './import'
-import { specificLumFromHue } from './solveFor'
+import { hexToSpec } from '../import'
+import { specificLumFromHue } from '../solveFor'
 
-export function mixPalettes({
-  palettes,
-  hexes,
-  ops,
+export function mixPalette({
+  hex,
+  scheme,
+  palettes = { states: { base: { elements: {} } } },
   place: [paletteIdx, stateKey, elementKey] = [0, null, null],
 }) {
-  if(!Array.isArray(palettes) || palettes.length === 0) throw new Error('Must provide at least one palette')
-
   let palettes_ = [...palettes]
   const palette = palettes_[paletteIdx]
   const state = stateKey
@@ -21,12 +18,12 @@ export function mixPalettes({
   const destination = element || state || palette
   const origin = element ? state : palette
 
-  if(!origin && hexes.length === 0) throw new Error('Must provide at least one hex')
+  if(!origin && !hex) throw new Error('Must provide a hex')
 
-  if(!origin.color) origin.color = hexToSpec(hexes[0])
+  if(!origin.color) origin.color = hexToSpec(hex)
   let color  = { ...origin.color }
 
-  const opsEntries = Object.entries(ops)
+  const schemeEntries = Object.entries(scheme)
   /*
   console.log("--- from", { ...origin }.id, 'to', { ...destination }.id,
     `[${paletteIdx}, ${stateKey}, ${elementKey}]`,
@@ -37,8 +34,8 @@ export function mixPalettes({
   console.log("    ||| ops", ops)
   console.log("    ||| palette", [...palette])
   */
-  for(let idx = 0; idx < opsEntries.length; idx++) {
-    const [key, value] = opsEntries[idx]
+  for(let idx = 0; idx < schemeEntries.length; idx++) {
+    const [key, value] = schemeEntries[idx]
     /*
     console.log("    > color", ...color)
     console.log('     ', key)
@@ -49,10 +46,10 @@ export function mixPalettes({
         // capture currentColor in palette
         switch(typeof value) {
           case 'number':
-            color = hexToSpec(hexes[value])
+            color = hexToSpec(hex)
             break
           case 'string':
-            hexes.unshift(value)
+            hex.unshift(value)
             color = hexToSpec(value)
             break
           default: throw new Error(`'color' accepts types 'string' or 'number'; got type '${typeof value}'`)
@@ -112,7 +109,7 @@ export function mixPalettes({
       case 'holds':
         const holdsEntries = Object.entries(value)
         for(let holdsEntryIdx = 0; holdsEntryIdx < holdsEntries.length; holdsEntryIdx++) {
-          const [subPaletteId, subPaletteOps] = holdsEntries[holdsEntryIdx]
+          const [subPaletteId, subPaletteScheme] = holdsEntries[holdsEntryIdx]
           const externalElements = {}
           const baseElementsEntries = Object.entries(palette.states.base.elements)
           for(let baseElementsIdx = 0; baseElementsIdx < baseElementsEntries.length; baseElementsIdx++) {
@@ -124,10 +121,10 @@ export function mixPalettes({
             color: palettes_[0].color,
             states: { base: { id: 'base', elements: externalElements } },
           })
-          palettes_ = mixPalettes({
+          palettes_ = mixPalette({
             palettes: palettes_,
-            hexes,
-            ops: subPaletteOps,
+            hex,
+            ops: subPaletteScheme,
             place: [palettes_.length - 1, null, null],
           })
         }
@@ -136,16 +133,16 @@ export function mixPalettes({
         const stateEntries = Object.entries(value)
         if(!element) {
           for(let stateEntryIdx = 0; stateEntryIdx < stateEntries.length; stateEntryIdx++) {
-            const [stateKey_, stateOps] = stateEntries[stateEntryIdx]
+            const [stateKey_, stateScheme] = stateEntries[stateEntryIdx]
             // console.log('    ||| stateEntry', stateKey_, stateOps)
             palette.states[stateKey_] = {
               id: stateKey_,
               elements: {},
             }
-            palette.states[stateKey_].color = mixPalettes({
+            palette.states[stateKey_].color = mixPalette({
+              hex,
+              scheme: stateScheme,
               palettes,
-              hexes,
-              ops: stateOps,
               place: [paletteIdx, stateKey_, null],
             })
             // console.log('      ', palette.states[stateKey_].hex)
@@ -157,9 +154,9 @@ export function mixPalettes({
             // console.log('    ||| >>> elementKey', elementKey)
             const state_ = palette.states[stateKey_]
             if(!state_.elements[elementKey]) state_.elements[elementKey] = {}
-            palette.states[stateKey_].elements[elementKey].hex = mixPalettes({
+            palette.states[stateKey_].elements[elementKey].hex = mixPalette({
               palettes,
-              hexes,
+              hex,
               ops: stateOps,
               place: [paletteIdx, stateKey_, elementKey],
             })
@@ -173,9 +170,9 @@ export function mixPalettes({
           const state_ = palette.states[stateKey_]
           // console.log('    ||| state_', state_)
           state_.elements[elementKey_] = { id: elementKey_ }
-          state_.elements[elementKey_].color = mixPalettes({
+          state_.elements[elementKey_].color = mixPalette({
             palettes,
-            hexes,
+            hex,
             ops: value,
             place: [paletteIdx, stateKey_, elementKey_],
           })
@@ -194,83 +191,4 @@ export function mixPalettes({
   }
   // console.log('--- returning palettes_', palettes_)
   return palettes_
-}
-
-function paletteToScssBlock(palette, tuner) {
-  let scssBlock = ''
-  const baseEntries = Object.entries(palette.states.base.elements)
-  for(let baseIdx = 0; baseIdx < baseEntries.length; baseIdx++) {
-    const [key, element] = baseEntries[baseIdx]
-    scssBlock += `  --${key}-color: ${specToHex({ ...element.color, tuner })};\n`
-  }
-  const stateEntries = Object.entries(palette.states)
-  for(let stateIdx = 0; stateIdx < stateEntries.length; stateIdx++) {
-    const [stateKey, stateObj] = stateEntries[stateIdx]
-    // console.log('stateKey', stateKey)
-    switch(stateKey) {
-      case 'hover':
-        scssBlock += `  &:hover, &:focus, &:focus-within {\n`
-        break
-      case 'active':
-        scssBlock += `  &:active, &.active {\n`
-        break
-      case 'disabled':
-        scssBlock += `  &:disabled, &.disabled {\n`
-        break
-      default: continue
-    }
-    const elementEntries = Object.entries(stateObj.elements)
-    for(let elementIdx = 0; elementIdx < elementEntries.length; elementIdx++) {
-      const [key, element] = elementEntries[elementIdx]
-      scssBlock += `    --${key}-color: ${specToHex({ ...element.color, tuner })};\n`
-    }
-    scssBlock += '  }\n'
-  }
-  return scssBlock
-}
-
-function paletteToScssClassRule(palette, tuner) {
-  let scssRule = `.${palette.id} {\n`
-  scssRule += paletteToScssBlock(palette, tuner)
-  scssRule += '}\n'
-  return scssRule
-}
-export function compileScssSheet(palettes, tuner) {
-  let scssSheet = ''
-  for(let idx = 0; idx < palettes.length; idx++) {
-    const palette = palettes[idx]
-    const scssRule = paletteToScssClassRule(palette, tuner)
-    scssSheet += `${scssRule}`
-  }
-  return scssSheet
-}
-
-function makeScssObject(palettes, tuner) {
-  const scssObject = {}
-  for(let index = 0; index < palettes.length; index++) {
-    const palette = palettes[index]
-    scssObject[palette.id] = paletteToScssBlock(palette, tuner)
-  }
-  return scssObject
-}
-
-const paletteTemplate = name => ({
-  id: name,
-  states: { base: { elements: {} } },
-})
-export default function makeColorPalettesFromHexes({ hexes, scheme, tuner }) {
-  const schemeEntries = Object.entries(scheme)
-  let palettes = []
-  for(let idx = 0; idx < schemeEntries.length; idx++) {
-    const [name, ops] = schemeEntries[idx]
-    const newPalettes = mixPalettes({
-      palettes: [paletteTemplate(name)],
-      hexes,
-      ops,
-    })
-    palettes = [...palettes, ...newPalettes]
-  }
-  const scss = makeScssObject(palettes, tuner)
-  // console.log(scss)
-  return scss
 }
