@@ -1,8 +1,4 @@
-import { noFilter, CMYK } from './builtInTunerKit'
-import { UI } from './schemes'
+import { noFilter, CMYK } from "./builtInTunerKit"
+import { UI } from "./schemes"
 
-export {
-  noFilter,
-  CMYK,
-  UI,
-}
+export { noFilter, CMYK, UI }

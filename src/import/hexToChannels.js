@@ -4,10 +4,12 @@ export default input => {
   const hex = validateHex.parse(input)
   const getHexcodeChannel = nameOfChannel => {
     switch (nameOfChannel) {
+      /* eslint-disable prettier/prettier */
       case `r`: return hex.substr(1, 2)
       case `g`: return hex.substr(3, 2)
       case `b`: return hex.substr(5, 2)
       default: throw new Error(`strange channel name`)
+      /* eslint-enable prettier/prettier */
     }
   }
   const rBase10 = parseInt(getHexcodeChannel(`r`), 16)

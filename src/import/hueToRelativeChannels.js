@@ -1,4 +1,4 @@
-import { wrapAround } from '../utils'
+import { wrapAround } from "../utils"
 /*eslint-disable */
 /**
  * Gives us the relative values of the channels,
@@ -118,6 +118,7 @@ export default hue => {
   const x = hueDecimal
   const y = 1 - hueDecimal
   switch (hueInteger) {
+    /* eslint-disable prettier/prettier */
     case 0: return [1, x, 0]
     case 1: return [y, 1, 0]
     case 2: return [0, 1, x]
@@ -125,5 +126,6 @@ export default hue => {
     case 4: return [x, 0, 1]
     case 5: return [1, 0, y]
     default: throw new Error(`invalid hue served: ${hue}`)
+    /* eslint-enable prettier/prettier */
   }
 }

@@ -1,5 +1,5 @@
-import { specToHex } from '.' // eslint-disable-line
-import { interpolate } from '../utils'
+import { specToHex } from "." // eslint-disable-line
+import { interpolate } from "../utils"
 
 function interpolateChanges(rootSpec, currentStep, axes) {
   const changes = {}
@@ -14,13 +14,14 @@ function interpolateChanges(rootSpec, currentStep, axes) {
           return rootValue + currentAxis.to
         case `function`:
           return currentAxis.to(rootSpec[attribute])
-        default: throw new Error((
-          `gradient axis type error:\n`
-          + `currentAxis.to ${currentAxis.to} (${typeof currentAxis.to})\n`
-          + `type must be\n`
-          + `* 'number'    (for absolute values) or\n`
-          + `* 'function'  (for values relative to the root value).`
-        ))
+        default:
+          throw new Error(
+            `gradient axis type error:\n`
+              + `currentAxis.to ${currentAxis.to} (${typeof currentAxis.to})\n`
+              + `type must be\n`
+              + `* 'number'    (for absolute values) or\n`
+              + `* 'function'  (for values relative to the root value).`
+          )
       }
     }
     const from = () => {
@@ -32,14 +33,17 @@ function interpolateChanges(rootSpec, currentStep, axes) {
           return rootValue + currentAxis.from
         case `function`:
           return currentAxis.from(rootSpec[attribute])
-        default: throw new Error((
-          `gradient axis type error:\n`
-          + `currentAxis.from ${currentAxis.from} (${typeof currentAxis.from})\n`
-          + `type must be\n`
-          + `* 'undefined' (to default to the root value)\n`
-          + `* 'number'    (for absolute values) or\n`
-          + `* 'function'  (for values relative to the root value).`
-        ))
+        default:
+          throw new Error(
+            `gradient axis type error:\n`
+              + `currentAxis.from ${
+                currentAxis.from
+              } (${typeof currentAxis.from})\n`
+              + `type must be\n`
+              + `* 'undefined' (to default to the root value)\n`
+              + `* 'number'    (for absolute values) or\n`
+              + `* 'function'  (for values relative to the root value).`
+          )
       }
     }
     const value = interpolate({
@@ -57,11 +61,7 @@ function gradientToHexArray(rootSpec, gradient, tuner) {
   const hexArray = []
   for (let stepIdx = 0; stepIdx < steps.length; stepIdx++) {
     const currentStep = steps[stepIdx]
-    const changes = interpolateChanges(
-      rootSpec,
-      currentStep,
-      axes,
-    )
+    const changes = interpolateChanges(rootSpec, currentStep, axes)
     const hex = specToHex({
       ...rootSpec,
       ...changes,

@@ -1,11 +1,7 @@
-import hexToSpec from './import/hexToSpec'
-import specToHex from './export/specToHex'
+import hexToSpec from "./import/hexToSpec"
+import specToHex from "./export/specToHex"
 
-export default ({
-  hex,
-  tuner,
-  offsets,
-}) => {
+export default ({ hex, tuner, offsets }) => {
   const rootSpec = hexToSpec(hex)
   const changes = {}
   for (let index = 0; index < offsets.length; index++) {
@@ -20,26 +16,15 @@ export default ({
         break
       case `lum`:
         if (offsetValue + rootValue < 0 || offsetValue + rootValue > 1) {
-          newValue
-          = rootValue
-          - (
-            offsetValue
-            - (sat >= 170
-              ? offsetValue * (sat - 170) / 85
-              : 0
-            )
-          )
-          * 1.67
+          newValue =
+            rootValue
+            - (offsetValue - (sat >= 170 ? (offsetValue * (sat - 170)) / 85 : 0))
+              * 1.67
         } else {
-          newValue
-          = rootValue
-          + (
-            offsetValue
-            - (sat >= 170
-              ? 0.333 * offsetValue * (sat - 170) / 85
-              : 0
-            )
-          )
+          newValue =
+            rootValue
+            + (offsetValue
+              - (sat >= 170 ? (0.333 * offsetValue * (sat - 170)) / 85 : 0))
         }
         break
       default:

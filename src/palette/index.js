@@ -9,10 +9,11 @@ import { mixPalette } from "./import"
 // })
 
 export default function scssPalette(arg) {
-  const { hex = `f00`, scheme = UI, tuner = CMYK }
-    = typeof arg === `string`
-      ? { hex: arg }
-      : arg
+  const {
+    hex = `f00`,
+    scheme = UI,
+    tuner = CMYK,
+  } = typeof arg === `string` ? { hex: arg } : arg
   const palette = mixPalette({
     hex,
     scheme,

@@ -1,5 +1,5 @@
-import { hexToSpec } from '../import'
-import { specificLumFromHue } from '../solveFor'
+import { hexToSpec } from "../import"
+import { specificLumFromHue } from "../solveFor"
 
 /* eslint-disable no-case-declarations */
 
@@ -16,19 +16,15 @@ export function mixPalette({
   // console.log(`| elementKey`, elementKey)
 
   const palette_ = { ...palette }
-  const state = stateKey
-    ? palette_.states[stateKey]
-    : null
-  const element = elementKey
-    ? state.elements[elementKey]
-    : null
+  const state = stateKey ? palette_.states[stateKey] : null
+  const element = elementKey ? state.elements[elementKey] : null
   const destination = element || state || palette_
   const origin = element ? state : palette_
 
   if (!origin && !hex) throw new Error(`Must provide a hex`)
 
   if (!origin.color) origin.color = hexToSpec(hex)
-  const color  = { ...origin.color }
+  const color = { ...origin.color }
   const schemeEntries = Object.entries(scheme)
   /*
   console.log("--- from", { ...origin }.id, 'to', { ...destination }.id,
@@ -58,43 +54,49 @@ export function mixPalette({
             color[key] = value(color[key])
             break
           // eslint-disable-next-line max-len
-          default: throw new Error(`hue, sat, lum accept types 'number' or 'function'; got type '${typeof value}'`)
+          default:
+            throw new Error(
+              `accept types 'number' or 'function'; got type '${typeof value}'`
+            )
         }
         break
       case `contrast`:
         switch (value) {
-          case `hard`: color.lum = color.lum > 0.67
-            ? 0
-            : 1
+          case `hard`:
+            color.lum = color.lum > 0.67 ? 0 : 1
             break
-          case `soft`: color.lum = color.lum > 0.67
-            ? 0.05
-            : 0.95
+          case `soft`:
+            color.lum = color.lum > 0.67 ? 0.05 : 0.95
             break
-          case `harden`: color.lum = color.lum > 0.67
-            ? 0
-            : 1
+          case `harden`:
+            color.lum = color.lum > 0.67 ? 0 : 1
             break
           // eslint-disable-next-line max-len
-          default: throw new Error(`'contrast' accepts 'hard' or 'soft'; got '${value}'`)
+          default:
+            throw new Error(
+              `'contrast' accepts 'hard' or 'soft'; got '${value}'`
+            )
         }
         color.prefer = `lum`
         break
       case `split`:
       case `trine`:
-      case `tetra`: break
+      case `tetra`:
+        break
       case `warm`:
-      case `cool`: break
+      case `cool`:
+        break
       case `amp`:
-      case `mute`: break
+      case `mute`:
+        break
       case `tint`:
       case `shade`:
         const percentSaturated = color.sat / 255
         const specificLum = specificLumFromHue(color.hue)
-        const lightAdjust
-          = 0.5 * (1 - percentSaturated) + specificLum * percentSaturated
+        const lightAdjust =
+          0.5 * (1 - percentSaturated) + specificLum * percentSaturated
         const charge = key === `tint` ? 100 : -100
-        const offset = lightAdjust * value / charge
+        const offset = (lightAdjust * value) / charge
         // console.log('lightAdjust', lightAdjust)
         // console.log('offset', offset)
         color.lum += offset
@@ -132,7 +134,8 @@ export function mixPalette({
               place: [stateKey_, elementKey],
             })
           }
-        } break
+        }
+        break
       default:
         const elementKey_ = key
         const stateKeys = Object.keys(palette_.states)

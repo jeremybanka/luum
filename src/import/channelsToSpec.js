@@ -1,8 +1,4 @@
-import {
-  hueFromChannels,
-  satFromChannels,
-  lumFromChannels,
-} from "../solveFor"
+import { hueFromChannels, satFromChannels, lumFromChannels } from "../solveFor"
 
 export default ({ R, G, B }) => {
   const hue = hueFromChannels({ R, G, B })

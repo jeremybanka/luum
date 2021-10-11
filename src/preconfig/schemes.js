@@ -1,8 +1,8 @@
 export const UI = {
   state: {
-    hover: { },
-    active: { },
-    disabled: { },
+    hover: {},
+    active: {},
+    disabled: {},
   },
   bg: {
     shade: 24,
@@ -43,9 +43,7 @@ export const UI = {
 */
 export const trifactory = {
   PaletteModule: {
-    contextColor: [
-      { resetColor: `#fee` }, { shade: 20 },
-    ],
+    contextColor: [{ resetColor: `#fee` }, { shade: 20 }],
     /*
     // NOTE: These state changes are localized to the current
     // object, and have no impact on children.
@@ -115,24 +113,18 @@ export const palettes = [
         id: `base`,
         hex: `#f00`,
         elements: [
-          { id: `bg`,
-            hex: `#f00` },
-          { id: `mg`,
-            hex: `#f00` },
-          { id: `fg`,
-            hex: `#f00` },
+          { id: `bg`, hex: `#f00` },
+          { id: `mg`, hex: `#f00` },
+          { id: `fg`, hex: `#f00` },
         ],
       },
       {
         id: `hover`,
         hex: `#f00`,
         elements: [
-          { id: `bg`,
-            hex: `#f00` },
-          { id: `mg`,
-            hex: `#f00` },
-          { id: `fg`,
-            hex: `#f00` },
+          { id: `bg`, hex: `#f00` },
+          { id: `mg`, hex: `#f00` },
+          { id: `fg`, hex: `#f00` },
         ],
       },
     ],

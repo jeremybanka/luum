@@ -90,12 +90,7 @@ async function buildLibrary(dest, opts) {
 
   if (opts.minify && TRUST_MINIFY) {
     promises.push(
-      babelAndRollup(
-        dest,
-        { ...opts,
-          minify: true,
-          filename: `luum.min.js` }
-      )
+      babelAndRollup(dest, { ...opts, minify: true, filename: `luum.min.js` })
     )
   }
 

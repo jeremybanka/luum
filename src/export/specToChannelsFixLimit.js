@@ -1,11 +1,11 @@
-import hueToRelativeChannels from '../import/hueToRelativeChannels'
-import { CMYK } from '../preconfig'
+import hueToRelativeChannels from "../import/hueToRelativeChannels"
+import { CMYK } from "../preconfig"
 import {
   lumFromChannels,
   specificLumFromHue,
   maxSatForHueFromTuner,
-} from '../solveFor'
-import funnel from '../utils/funnel'
+} from "../solveFor"
+import funnel from "../utils/funnel"
 
 export default ({ hue, sat, lum, prefer = `sat`, tuner = CMYK }) => {
   /*
@@ -16,8 +16,8 @@ export default ({ hue, sat, lum, prefer = `sat`, tuner = CMYK }) => {
   */
   const relativeChannels = hueToRelativeChannels(hue)
   function makeMinChannels(trueSaturation) {
-    const makeMinChannel
-    = idx => Math.round(relativeChannels[idx] * trueSaturation)
+    const makeMinChannel = idx =>
+      Math.round(relativeChannels[idx] * trueSaturation)
     return {
       R: makeMinChannel(0),
       G: makeMinChannel(1),
@@ -57,9 +57,11 @@ export default ({ hue, sat, lum, prefer = `sat`, tuner = CMYK }) => {
     const specificLum = specificLumFromHue(hue)
     maxSat = Math.min(
       maxSat,
-      Math.round(trueLuminosity <= specificLum
-        ? 255 * (trueLuminosity / specificLum)
-        : 255 * (1 - trueLuminosity) / (1 - specificLum))
+      Math.round(
+        trueLuminosity <= specificLum
+          ? 255 * (trueLuminosity / specificLum)
+          : (255 * (1 - trueLuminosity)) / (1 - specificLum)
+      )
     )
     trueSaturation = Math.min(sat, maxSat)
     minChannels = makeMinChannels(trueSaturation)
@@ -72,11 +74,11 @@ export default ({ hue, sat, lum, prefer = `sat`, tuner = CMYK }) => {
     console.log('||| minChannels', minChannels)
     */
   }
-  const maxWhite = (255 - Math.max(...Object.values(minChannels)))
-  const white = funnel(
-    Math.round((trueLuminosity - minLum) * 255),
-    [0, maxWhite]
-  )
+  const maxWhite = 255 - Math.max(...Object.values(minChannels))
+  const white = funnel(Math.round((trueLuminosity - minLum) * 255), [
+    0,
+    maxWhite,
+  ])
   const { R, G, B } = {
     R: minChannels.R + white,
     G: minChannels.G + white,

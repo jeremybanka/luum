@@ -1,7 +1,4 @@
-export default ({
-  completionRatio = 0.5,
-  range: [to, from],
-}) => {
+export default ({ completionRatio = 0.5, range: [to, from] }) => {
   const value = from + completionRatio * (to - from)
   /*
   console.log('||| to', to, 'from', from)

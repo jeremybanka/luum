@@ -1,44 +1,26 @@
-import scssPalette from './palette'
-import getStandout from './getStandout'
-import getOffset from './getOffset'
-import {
-  softContrast,
-  hardContrast,
-} from './contrast'
+import scssPalette from "./palette"
+import getStandout from "./getStandout"
+import getOffset from "./getOffset"
+import { softContrast, hardContrast } from "./contrast"
 import {
   channelsToSpec,
   hexToChannels,
   hexToSpec,
   hueToRelativeChannels,
   validateHex,
-} from './import'
-import {
-  specToHex,
-  specToHexFixLimit,
-  gradientsToHexArrays,
-} from './export'
+} from "./import"
+import { specToHex, specToHexFixLimit, gradientsToHexArrays } from "./export"
 import {
   maxSatForHueFromTuner,
   hueFromChannels,
   satFromChannels,
   lumFromChannels,
   specificLumFromHue,
-}  from './solveFor'
-import nameHue from './identify/nameHue'
-import {
-  funnel,
-  interpolate,
-  wrapAround,
-} from './utils'
-import {
-  HUE_STRUCTURES,
-  CHANNEL_SPECIFIC_LUM,
-} from './constants'
-import {
-  noFilter,
-  CMYK,
-  UI,
-} from './preconfig'
+} from "./solveFor"
+import nameHue from "./identify/nameHue"
+import { funnel, interpolate, wrapAround } from "./utils"
+import { HUE_STRUCTURES, CHANNEL_SPECIFIC_LUM } from "./constants"
+import { noFilter, CMYK, UI } from "./preconfig"
 
 export {
   getStandout,
