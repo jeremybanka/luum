@@ -8,30 +8,51 @@ export default ({
 }) => {
   const rootSpec = hexToSpec(hex)
   const changes = {}
-  for(let index = 0; index < offsets.length; index++) {
+  for (let index = 0; index < offsets.length; index++) {
     const { attribute, offsetValue } = offsets[index]
     const rootValue = rootSpec[attribute]
     const { sat } = rootSpec
     let newValue
-    switch(attribute) {
-      case 'hue':
-      case 'sat':
+    switch (attribute) {
+      case `hue`:
+      case `sat`:
         newValue = rootValue + offsetValue
         break
-      case 'lum':
-        if(offsetValue + rootValue < 0 || offsetValue + rootValue > 1) {
-          newValue = rootValue - (offsetValue - (sat >= 170 ? offsetValue * (sat - 170) / 85 : 0)) * 1.67
-        } else { newValue = rootValue + (offsetValue - (sat >= 170 ? 0.333 * offsetValue * (sat - 170) / 85 : 0)) }
+      case `lum`:
+        if (offsetValue + rootValue < 0 || offsetValue + rootValue > 1) {
+          newValue
+          = rootValue
+          - (
+            offsetValue
+            - (sat >= 170
+              ? offsetValue * (sat - 170) / 85
+              : 0
+            )
+          )
+          * 1.67
+        } else {
+          newValue
+          = rootValue
+          + (
+            offsetValue
+            - (sat >= 170
+              ? 0.333 * offsetValue * (sat - 170) / 85
+              : 0
+            )
+          )
+        }
         break
       default:
-        throw new Error('Received spec attribute other than "hue," "sat," or "lum."')
+        throw new Error(
+          `Received spec attribute other than "hue," "sat," or "lum."`
+        )
     }
     changes[attribute] = newValue
   }
   const newHex = specToHex({
     ...rootSpec,
     ...changes,
-    prefer: 'lum',
+    prefer: `lum`,
     tuner,
   })
   return newHex

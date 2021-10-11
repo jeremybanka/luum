@@ -7,7 +7,7 @@ import {
 } from '../solveFor'
 import funnel from '../utils/funnel'
 
-export default ({ hue, sat, lum, prefer = 'sat', tuner = CMYK }) => {
+export default ({ hue, sat, lum, prefer = `sat`, tuner = CMYK }) => {
   /*
   console.log('||| hue', hue)
   console.log('||| sat', sat)
@@ -16,7 +16,8 @@ export default ({ hue, sat, lum, prefer = 'sat', tuner = CMYK }) => {
   */
   const relativeChannels = hueToRelativeChannels(hue)
   function makeMinChannels(trueSaturation) {
-    const makeMinChannel = idx => Math.round(relativeChannels[idx] * trueSaturation)
+    const makeMinChannel
+    = idx => Math.round(relativeChannels[idx] * trueSaturation)
     return {
       R: makeMinChannel(0),
       G: makeMinChannel(1),
@@ -30,7 +31,7 @@ export default ({ hue, sat, lum, prefer = 'sat', tuner = CMYK }) => {
   let maxLum = 1
   let maxSat = maxSatForHueFromTuner(hue, tuner)
 
-  if(prefer === 'sat') {
+  if (prefer === `sat`) {
     trueSaturation = funnel(Math.min(sat, maxSat), [0, 255])
     minChannels = makeMinChannels(trueSaturation)
     const maxChannels = {
@@ -51,7 +52,7 @@ export default ({ hue, sat, lum, prefer = 'sat', tuner = CMYK }) => {
     console.log('||| trueLuminosity', trueLuminosity)
     */
   }
-  if(prefer === 'lum') {
+  if (prefer === `lum`) {
     trueLuminosity = funnel(lum, [0, 1])
     const specificLum = specificLumFromHue(hue)
     maxSat = Math.min(
@@ -96,7 +97,7 @@ export default ({ hue, sat, lum, prefer = 'sat', tuner = CMYK }) => {
     },
     limit: {
       sat: [0, maxSat],
-      lum: [prefer === 'lum' ? 0 : minLum, maxLum],
+      lum: [prefer === `lum` ? 0 : minLum, maxLum],
     },
   }
 }

@@ -2,46 +2,50 @@ import { wrapAround } from "../utils"
 
 const rangeNames = [
   { hue: 20,
-    name: 'orange' },
+    name: `orange` },
   { hue: 45,
-    name: 'yellow' },
+    name: `yellow` },
   { hue: 61,
-    name: 'citron' },
+    name: `citron` },
   { hue: 80,
-    name: 'lime' },
+    name: `lime` },
   { hue: 100,
-    name: 'green' },
+    name: `green` },
   { hue: 150,
-    name: 'teal' },
+    name: `teal` },
   { hue: 180,
-    name: 'cyan' },
+    name: `cyan` },
   { hue: 200,
-    name: 'blue' },
+    name: `blue` },
   { hue: 240,
-    name: 'indigo' },
+    name: `indigo` },
   { hue: 270,
-    name: 'violet' },
+    name: `violet` },
   { hue: 300,
-    name: 'magenta' },
+    name: `magenta` },
   { hue: 330,
-    name: 'pink' },
+    name: `pink` },
   { hue: 350,
-    name: 'red' },
+    name: `red` },
 ]
 
 export default hue => {
   // console.log('||| hue', hue)
   const hueWrapped = wrapAround(hue, [0, 360])
-  for(let a = -1, b = 0; b < rangeNames.length; a++, b++) {
+  for (let a = -1, b = 0; b < rangeNames.length; a++, b++) {
     a = wrapAround(a, [0, rangeNames.length])
-    const hueDoubleWrapped = a > b ? wrapAround(hueWrapped, [-180, 180]) : undefined
+    const hueDoubleWrapped = a > b
+      ? wrapAround(hueWrapped, [-180, 180])
+      : undefined
     const namingPointA = rangeNames[a]
     const namingPointB = rangeNames[b]
-    const hueA = a > b ? wrapAround(namingPointA.hue, [-180, 180]) : namingPointA.hue
+    const hueA = a > b
+      ? wrapAround(namingPointA.hue, [-180, 180])
+      : namingPointA.hue
     const hueB = namingPointB.hue
-    if(
-      (hueDoubleWrapped || hueWrapped) >= hueA &&
-      (hueDoubleWrapped || hueWrapped) < hueB) {
+    if (
+      (hueDoubleWrapped || hueWrapped) >= hueA
+      && (hueDoubleWrapped || hueWrapped) < hueB) {
       /*
       console.log('||| hue', hue,
         'is between', namingPointA.hue,

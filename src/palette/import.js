@@ -1,6 +1,8 @@
 import { hexToSpec } from '../import'
 import { specificLumFromHue } from '../solveFor'
 
+/* eslint-disable no-case-declarations */
+
 export function mixPalette({
   hex,
   scheme,
@@ -23,9 +25,9 @@ export function mixPalette({
   const destination = element || state || palette_
   const origin = element ? state : palette_
 
-  if(!origin && !hex) throw new Error('Must provide a hex')
+  if (!origin && !hex) throw new Error(`Must provide a hex`)
 
-  if(!origin.color) origin.color = hexToSpec(hex)
+  if (!origin.color) origin.color = hexToSpec(hex)
   const color  = { ...origin.color }
   const schemeEntries = Object.entries(scheme)
   /*
@@ -38,70 +40,72 @@ export function mixPalette({
   console.log("    ||| ops", ops)
   console.log("    ||| palette", [...palette])
   */
-  for(const [key, value] of schemeEntries) {
+  for (const [key, value] of schemeEntries) {
     /*
     console.log("    > color", ...color)
     console.log('     ', key)
     console.log('     ', value)
     */
-    switch(key) {
-      case 'hue':
-      case 'sat':
-      case 'lum':
-        switch(typeof value) {
-          case 'number':
+    switch (key) {
+      case `hue`:
+      case `sat`:
+      case `lum`:
+        switch (typeof value) {
+          case `number`:
             color[key] = value
             break
-          case 'function':
+          case `function`:
             color[key] = value(color[key])
             break
+          // eslint-disable-next-line max-len
           default: throw new Error(`hue, sat, lum accept types 'number' or 'function'; got type '${typeof value}'`)
         }
         break
-      case 'contrast':
-        switch(value) {
-          case 'hard': color.lum = color.lum > 0.67
+      case `contrast`:
+        switch (value) {
+          case `hard`: color.lum = color.lum > 0.67
             ? 0
             : 1
             break
-          case 'soft': color.lum = color.lum > 0.67
+          case `soft`: color.lum = color.lum > 0.67
             ? 0.05
             : 0.95
             break
-          case 'harden': color.lum = color.lum > 0.67
+          case `harden`: color.lum = color.lum > 0.67
             ? 0
             : 1
             break
+          // eslint-disable-next-line max-len
           default: throw new Error(`'contrast' accepts 'hard' or 'soft'; got '${value}'`)
         }
-        color.prefer = 'lum'
+        color.prefer = `lum`
         break
-      case 'split':
-      case 'trine':
-      case 'tetra': break
-      case 'warm':
-      case 'cool': break
-      case 'amp':
-      case 'mute': break
-      case 'tint':
-      case 'shade':
+      case `split`:
+      case `trine`:
+      case `tetra`: break
+      case `warm`:
+      case `cool`: break
+      case `amp`:
+      case `mute`: break
+      case `tint`:
+      case `shade`:
         const percentSaturated = color.sat / 255
         const specificLum = specificLumFromHue(color.hue)
-        const lightAdjust = 0.5 * (1 - percentSaturated) + specificLum * percentSaturated
-        const charge = key === 'tint' ? 100 : -100
+        const lightAdjust
+          = 0.5 * (1 - percentSaturated) + specificLum * percentSaturated
+        const charge = key === `tint` ? 100 : -100
         const offset = lightAdjust * value / charge
         // console.log('lightAdjust', lightAdjust)
         // console.log('offset', offset)
         color.lum += offset
-        if(color.lum < 0 || color.lum > 1) color.lum -= 2.5 * offset
-        color.prefer = 'lum'
+        if (color.lum < 0 || color.lum > 1) color.lum -= 2.5 * offset
+        color.prefer = `lum`
         break
 
-      case 'state':
+      case `state`:
         const stateEntries = Object.entries(value)
-        if(!element) {
-          for(let stateEntryIdx = 0; stateEntryIdx < stateEntries.length; stateEntryIdx++) {
-            const [stateKey_, stateScheme] = stateEntries[stateEntryIdx]
+        if (!element) {
+          for (const [stateKey_, stateScheme] of stateEntries) {
             // console.log('    ||| stateEntry', stateKey_, stateOps)
             palette_.states[stateKey_] = {
               id: stateKey_,
@@ -116,12 +120,11 @@ export function mixPalette({
             // console.log('      ', palette.states[stateKey_].hex)
           }
         } else {
-          for(let stateEntryIdx = 0; stateEntryIdx < stateEntries.length; stateEntryIdx++) {
-            const [stateKey_, stateOps] = stateEntries[stateEntryIdx]
+          for (const [stateKey_, stateOps] of stateEntries) {
             // console.log('    ||| >>> stateEntry', stateKey_, stateOps)
             // console.log('    ||| >>> elementKey', elementKey)
             const state_ = palette_.states[stateKey_]
-            if(!state_.elements[elementKey]) state_.elements[elementKey] = {}
+            if (!state_.elements[elementKey]) state_.elements[elementKey] = {}
             palette_.states[stateKey_].elements[elementKey].hex = mixPalette({
               hex,
               scheme: stateOps,
@@ -133,8 +136,7 @@ export function mixPalette({
       default:
         const elementKey_ = key
         const stateKeys = Object.keys(palette_.states)
-        for(let stateKeysIdx = 0; stateKeysIdx < stateKeys.length; stateKeysIdx++) {
-          const stateKey_ = stateKeys[stateKeysIdx]
+        for (const stateKey_ of stateKeys) {
           const state_ = palette_.states[stateKey_]
           // console.log('    ||| state_', state_)
           state_.elements[elementKey_] = { id: elementKey_ }
@@ -148,12 +150,12 @@ export function mixPalette({
     }
     // hex = specToHex({ ...color, tuner })
     destination.color = color
-    if(!state) destination.states.base.color = color
+    if (!state) destination.states.base.color = color
 
     // console.log("    < color", color, color)
     // console.log("      set", { ...destination }.id)
   }
-  if(element || state) {
+  if (element || state) {
     // console.log('---', destination.id, 'color', color)
     return color
   }
@@ -161,6 +163,8 @@ export function mixPalette({
   // console.log(palette_)
   return palette_
 }
+
+/* eslint-disable */
 
 // case 'holds':
 //   const holdsEntries = Object.entries(value)

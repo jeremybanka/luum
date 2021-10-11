@@ -1,3 +1,8 @@
-export default function (value, [min, max]) {
-  return value > max ? max : value < min ? min : value
-}
+const funnel = (value, [min, max]) =>
+  value > max
+    ? max
+    : value < min
+      ? min
+      : value
+
+export default funnel

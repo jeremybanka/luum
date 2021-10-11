@@ -1,51 +1,52 @@
 /* eslint import/no-extraneous-dependencies: off */
 /* eslint no-console: off */
-const rollup = require("rollup"),
-  rollupBabel = require("rollup-plugin-babel"),
-  rollupMinify = require("rollup-plugin-babel-minify"),
-  rollupNode = require("@rollup/plugin-node-resolve"),
-  rollupCommonJS = require("@rollup/plugin-commonjs"),
-  UglifyJS = require("uglify-js"),
-  fs = require("fs");
+const rollup = require(`rollup`)
+const rollupBabel = require(`rollup-plugin-babel`)
+const rollupMinify = require(`rollup-plugin-babel-minify`)
+const rollupNode = require(`@rollup/plugin-node-resolve`)
+const rollupCommonJS = require(`@rollup/plugin-commonjs`)
+const UglifyJS = require(`uglify-js`)
+const fs = require(`fs`)
 
-// For some reason, the minifier is currently producing total giberrish, at least for the global build.
+// For some reason, the minifier is currently producing total giberrish
+// at least for the global build.
 // I've disabled it for now, and will simply uglify externally.
-const TRUST_MINIFY = false;
+const TRUST_MINIFY = false
 
 function rollupInputOpts(opts) {
   const presetOpts = {
     modules: false,
-    loose: true
-  };
+    loose: true,
+  }
 
   if (opts.target) {
-    presetOpts.targets = opts.target;
+    presetOpts.targets = opts.target
   }
 
   const inputOpts = {
-    input: opts.src || "./src/luum.js",
+    input: opts.src || `./src/index.js`,
     onwarn: warning => {
       // I don't care about these for now
-      if (warning.code !== "CIRCULAR_DEPENDENCY") {
-        console.warn(`(!) ${warning.message}`);
+      if (warning.code !== `CIRCULAR_DEPENDENCY`) {
+        console.warn(`(!) ${warning.message}`)
       }
     },
 
     plugins: [
       rollupNode(),
       rollupCommonJS({
-        include: "node_modules/**"
-      })
-    ]
-  };
+        include: `node_modules/**`,
+      }),
+    ],
+  }
 
-  if (opts.compile || typeof opts.compile === "undefined") {
+  if (opts.compile || typeof opts.compile === `undefined`) {
     inputOpts.plugins.push(
       rollupBabel({
         babelrc: false,
-        presets: [["@babel/preset-env", presetOpts]]
+        presets: [[`@babel/preset-env`, presetOpts]],
       })
-    );
+    )
   }
 
   if (opts.minify && TRUST_MINIFY) {
@@ -53,139 +54,138 @@ function rollupInputOpts(opts) {
       rollupMinify({
         comments: false,
         mangle: {
-          topLevel: !opts.global
-        }
+          topLevel: !opts.global,
+        },
       })
-    );
+    )
   }
 
-  return inputOpts;
+  return inputOpts
 }
 
 function rollupOutputOpts(dest, opts) {
   const outputOpts = {
-    file: `build/${dest}/${opts.filename || "luum.js"}`,
+    file: `build/${dest}/${opts.filename || `luum.js`}`,
     format: opts.format,
-    sourcemap: true
-  };
-
-  if (opts.name) {
-    outputOpts.name = opts.name;
+    sourcemap: true,
   }
 
-  return outputOpts;
+  if (opts.name) {
+    outputOpts.name = opts.name
+  }
+
+  return outputOpts
 }
 
 async function babelAndRollup(dest, opts) {
-  const inputOpts = rollupInputOpts(opts),
-    outputOpts = rollupOutputOpts(dest, opts),
-    bundle = await rollup.rollup(inputOpts);
-  await bundle.write(outputOpts);
+  const inputOpts = rollupInputOpts(opts)
+  const outputOpts = rollupOutputOpts(dest, opts)
+  const bundle = await rollup.rollup(inputOpts)
+  await bundle.write(outputOpts)
 }
 
 async function buildLibrary(dest, opts) {
-  console.log("Building", dest);
-  const promises = [babelAndRollup(dest, opts)];
+  console.log(`Building`, dest)
+  const promises = [babelAndRollup(dest, opts)]
 
   if (opts.minify && TRUST_MINIFY) {
     promises.push(
       babelAndRollup(
         dest,
-        Object.assign({}, opts, {
+        { ...opts,
           minify: true,
-          filename: "luum.min.js"
-        })
+          filename: `luum.min.js` }
       )
-    );
+    )
   }
 
-  await Promise.all(promises);
+  await Promise.all(promises)
 
   if (opts.minify && !TRUST_MINIFY) {
-    const code = fs.readFileSync(`build/${dest}/luum.js`, "utf8"),
-      ugly = UglifyJS.minify(code, {
-        toplevel: !opts.global,
-        output: {
-          comments: false
-        },
-        sourceMap: {
-          filename: `build/${dest}/luum.js`
-        }
-      });
+    const code = fs.readFileSync(`build/${dest}/luum.js`, `utf8`)
+    const ugly = UglifyJS.minify(code, {
+      toplevel: !opts.global,
+      output: {
+        comments: false,
+      },
+      sourceMap: {
+        filename: `build/${dest}/luum.js`,
+      },
+    })
     if (ugly.error) {
-      console.error("Error uglifying", ugly.error);
+      console.error(`Error uglifying`, ugly.error)
     } else {
-      fs.writeFileSync(`build/${dest}/luum.min.js`, ugly.code);
-      fs.writeFileSync(`build/${dest}/luum.min.js.map`, ugly.map);
+      fs.writeFileSync(`build/${dest}/luum.min.js`, ugly.code)
+      fs.writeFileSync(`build/${dest}/luum.min.js.map`, ugly.map)
     }
   }
-  console.log("Built", dest);
+  console.log(`Built`, dest)
 }
 
-const browsersOld = "last 2 major versions";
+const browsersOld = `last 2 major versions`
 
 async function global() {
-  await buildLibrary("global", {
-    format: "iife",
+  await buildLibrary(`global`, {
+    format: `iife`,
     global: true,
-    name: "luum",
+    name: `luum`,
     target: browsersOld,
-    minify: true
-  });
+    minify: true,
+  })
 }
 
 async function globalFilled() {
-  await buildLibrary("global-filled", {
-    format: "iife",
+  await buildLibrary(`global-filled`, {
+    format: `iife`,
     global: true,
-    name: "luum",
+    name: `luum`,
     target: browsersOld,
-    src: "./src/luumFilled.js",
-    minify: true
-  });
+    src: `./src/luumFilled.js`,
+    minify: true,
+  })
 }
 
 async function amd() {
-  await buildLibrary("amd", {
-    format: "amd",
-    name: "luum",
+  await buildLibrary(`amd`, {
+    format: `amd`,
+    name: `luum`,
     target: browsersOld,
-    minify: true
-  });
+    minify: true,
+  })
 }
 
 async function amdFilled() {
-  await buildLibrary("amd-filled", {
-    format: "amd",
-    name: "luum",
+  await buildLibrary(`amd-filled`, {
+    format: `amd`,
+    name: `luum`,
     target: browsersOld,
-    src: "./src/luumFilled.js",
-    minify: true
-  });
+    src: `./src/luumFilled.js`,
+    minify: true,
+  })
 }
 
 async function node() {
-  await buildLibrary("node", { format: "cjs", target: "node 6" });
+  await buildLibrary(`node`, { format: `cjs`, target: `node 6` })
 }
 
 async function cjsBrowser() {
-  await buildLibrary("cjs-browser", { format: "cjs", target: browsersOld });
+  await buildLibrary(`cjs-browser`, { format: `cjs`, target: browsersOld })
 }
 
 async function es6() {
-  await buildLibrary("es6", {
-    format: "es",
-    compile: false
-  });
+  await buildLibrary(`es6`, {
+    format: `es`,
+    compile: false,
+  })
 }
 
 async function globalEs6() {
-  await buildLibrary("global-es6", {
-    format: "iife",
-    name: "luum",
+  await buildLibrary(`global-es6`, {
+    format: `iife`,
+    name: `luum`,
     compile: false,
-    global: true
-  });
+    global: true,
+  })
 }
 
 async function buildAll() {
@@ -197,12 +197,12 @@ async function buildAll() {
     amdFilled(),
     global(),
     globalEs6(),
-    globalFilled()
-  ]);
+    globalFilled(),
+  ])
 }
 
 module.exports = {
   buildAll,
   buildNode: node,
-  buildGlobal: global
-};
+  buildGlobal: global,
+}

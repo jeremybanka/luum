@@ -1,4 +1,5 @@
 import { wrapAround } from '../utils'
+/*eslint-disable */
 /**
  * Gives us the relative values of the channels,
  * irrespective of the white light beneath them.
@@ -108,6 +109,7 @@ import { wrapAround } from '../utils'
  *
  * here we see detailed breakdowns of the function's final output for our running examples.
  */
+/* eslint-enable */
 export default hue => {
   hue = wrapAround(hue, [0, 360])
   const hueReduced = hue / 60
@@ -115,7 +117,7 @@ export default hue => {
   const hueDecimal = hueReduced - hueInteger
   const x = hueDecimal
   const y = 1 - hueDecimal
-  switch(hueInteger) {
+  switch (hueInteger) {
     case 0: return [1, x, 0]
     case 1: return [y, 1, 0]
     case 2: return [0, 1, x]

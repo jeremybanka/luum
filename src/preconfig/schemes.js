@@ -17,10 +17,10 @@ export const UI = {
     shade: 48,
   },
   fg: {
-    contrast: 'soft',
+    contrast: `soft`,
     state: {
-      hover: { contrast: 'harden' },
-      active: { contrast: 'harden' },
+      hover: { contrast: `harden` },
+      active: { contrast: `harden` },
       disabled: { shade: 20 },
     },
   },
@@ -44,7 +44,7 @@ export const UI = {
 export const trifactory = {
   PaletteModule: {
     contextColor: [
-      { resetColor: '#fee' }, { shade: 20 },
+      { resetColor: `#fee` }, { shade: 20 },
     ],
     /*
     // NOTE: These state changes are localized to the current
@@ -58,7 +58,7 @@ export const trifactory = {
     variables: {
       bg: [],
       mg: [{ resetColor: 1 }, { shade: 10 }],
-      fg: [{ contrast: 'soft' }],
+      fg: [{ contrast: `soft` }],
     },
     children: {
       Control: {
@@ -76,9 +76,9 @@ export const trifactory = {
             // NOTE: All these colors start with a context of the
             // existing state of the parent.
             states: {
-              base: [{ shade: 24 }, { contrast: 'soft' }],
-              hover: [{ shade: 24 }, { contrast: 'soft' }],
-              active: [{ shade: 24 }, { contrast: 'hard' }],
+              base: [{ shade: 24 }, { contrast: `soft` }],
+              hover: [{ shade: 24 }, { contrast: `soft` }],
+              active: [{ shade: 24 }, { contrast: `hard` }],
             },
           },
         },
@@ -108,31 +108,31 @@ export const trifactory = {
 // palettes
 export const palettes = [
   {
-    id: 'PaletteName',
-    hex: '#f00',
+    id: `PaletteName`,
+    hex: `#f00`,
     states: [
       {
-        id: 'base',
-        hex: '#f00',
+        id: `base`,
+        hex: `#f00`,
         elements: [
-          { id: 'bg',
-            hex: '#f00' },
-          { id: 'mg',
-            hex: '#f00' },
-          { id: 'fg',
-            hex: '#f00' },
+          { id: `bg`,
+            hex: `#f00` },
+          { id: `mg`,
+            hex: `#f00` },
+          { id: `fg`,
+            hex: `#f00` },
         ],
       },
       {
-        id: 'hover',
-        hex: '#f00',
+        id: `hover`,
+        hex: `#f00`,
         elements: [
-          { id: 'bg',
-            hex: '#f00' },
-          { id: 'mg',
-            hex: '#f00' },
-          { id: 'fg',
-            hex: '#f00' },
+          { id: `bg`,
+            hex: `#f00` },
+          { id: `mg`,
+            hex: `#f00` },
+          { id: `fg`,
+            hex: `#f00` },
         ],
       },
     ],

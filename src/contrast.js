@@ -4,8 +4,8 @@ import { hexToSpec } from './import'
 export function hardContrast(hex) {
   const { lum } = hexToSpec(hex)
   const contrast = lum > 0.666
-    ? 'black'
-    : 'white'
+    ? `black`
+    : `white`
   return contrast
 }
 
@@ -17,7 +17,7 @@ export function softContrast(hex, tuner) {
   const newHex = specToHex({
     ...rootSpec,
     lum: newLum,
-    prefer: 'lum',
+    prefer: `lum`,
     tuner,
   })
   return newHex

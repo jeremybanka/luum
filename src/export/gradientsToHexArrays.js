@@ -3,42 +3,42 @@ import { interpolate } from '../utils'
 
 function interpolateChanges(rootSpec, currentStep, axes) {
   const changes = {}
-  for(let axisIdx = 0; axisIdx < axes.length; axisIdx++) {
+  for (let axisIdx = 0; axisIdx < axes.length; axisIdx++) {
     const currentAxis = axes[axisIdx]
     const { attribute, relative } = currentAxis
     const rootValue = rootSpec[attribute]
     const to = () => {
-      switch(typeof currentAxis.to) {
-        case 'number':
-          if(!relative) return currentAxis.to
+      switch (typeof currentAxis.to) {
+        case `number`:
+          if (!relative) return currentAxis.to
           return rootValue + currentAxis.to
-        case 'function':
+        case `function`:
           return currentAxis.to(rootSpec[attribute])
         default: throw new Error((
-          `gradient axis type error:\n` +
-          `currentAxis.to is ${currentAxis.to} (type: ${typeof currentAxis.to})\n` +
-          `type must be\n` +
-          `* 'number'    (for absolute values) or\n` +
-          `* 'function'  (for values relative to the root value).`
+          `gradient axis type error:\n`
+          + `currentAxis.to ${currentAxis.to} (${typeof currentAxis.to})\n`
+          + `type must be\n`
+          + `* 'number'    (for absolute values) or\n`
+          + `* 'function'  (for values relative to the root value).`
         ))
       }
     }
     const from = () => {
-      switch(typeof currentAxis.from) {
-        case 'undefined':
+      switch (typeof currentAxis.from) {
+        case `undefined`:
           return rootSpec[attribute]
-        case 'number':
-          if(!relative) return currentAxis.from
+        case `number`:
+          if (!relative) return currentAxis.from
           return rootValue + currentAxis.from
-        case 'function':
+        case `function`:
           return currentAxis.from(rootSpec[attribute])
         default: throw new Error((
-          `gradient axis type error:\n` +
-          `currentAxis.from is ${currentAxis.from} (type: ${typeof currentAxis.from})\n` +
-          `type must be\n` +
-          `* 'undefined' (to default to the root value)\n` +
-          `* 'number'    (for absolute values) or\n` +
-          `* 'function'  (for values relative to the root value).`
+          `gradient axis type error:\n`
+          + `currentAxis.from ${currentAxis.from} (${typeof currentAxis.from})\n`
+          + `type must be\n`
+          + `* 'undefined' (to default to the root value)\n`
+          + `* 'number'    (for absolute values) or\n`
+          + `* 'function'  (for values relative to the root value).`
         ))
       }
     }
@@ -55,7 +55,7 @@ function interpolateChanges(rootSpec, currentStep, axes) {
 function gradientToHexArray(rootSpec, gradient, tuner) {
   const { steps, axes, prefer } = gradient
   const hexArray = []
-  for(let stepIdx = 0; stepIdx < steps.length; stepIdx++) {
+  for (let stepIdx = 0; stepIdx < steps.length; stepIdx++) {
     const currentStep = steps[stepIdx]
     const changes = interpolateChanges(
       rootSpec,
@@ -78,7 +78,7 @@ export default (originalColorObject, tuner) => {
   const { hue, sat, lum } = originalColorObject
   const rootSpec = { hue, sat, lum }
   const hexArrays = []
-  for(let gradientIdx = 0; gradientIdx < gradients.length; gradientIdx++) {
+  for (let gradientIdx = 0; gradientIdx < gradients.length; gradientIdx++) {
     const gradient = gradients[gradientIdx]
     const hexArray = gradientToHexArray(rootSpec, gradient, tuner)
     hexArrays.push(hexArray)
