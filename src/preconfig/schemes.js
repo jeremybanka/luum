@@ -1,35 +1,27 @@
 export const UI = {
-  color: 0,
-  bg: { },
-  mg: { shade: 10 },
-  fg: { contrast: 'soft' },
-  holds: {
-    Control: {
-      state: {
-        hover: { },
-        active: { },
-        disabled: { },
-      },
-      bg: {
-        shade: 24,
-        state: {
-          base: {},
-          hover: { shade: 18 },
-          active: { shade: 32 },
-          disabled: { shade: 32 },
-        },
-      },
-      mg: {
-        shade: 48,
-      },
-      fg: {
-        contrast: 'soft',
-        state: {
-          hover: { contrast: 'harden' },
-          active: { contrast: 'harden' },
-          disabled: { shade: 20 },
-        },
-      },
+  state: {
+    hover: { },
+    active: { },
+    disabled: { },
+  },
+  bg: {
+    shade: 24,
+    state: {
+      base: {},
+      hover: { shade: 18 },
+      active: { shade: 32 },
+      disabled: { shade: 32 },
+    },
+  },
+  mg: {
+    shade: 48,
+  },
+  fg: {
+    contrast: 'soft',
+    state: {
+      hover: { contrast: 'harden' },
+      active: { contrast: 'harden' },
+      disabled: { shade: 20 },
     },
   },
 }

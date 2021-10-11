@@ -1,4 +1,4 @@
-import scheme from './scheme'
+import scssPalette from './palette'
 import getStandout from './getStandout'
 import getOffset from './getOffset'
 import {
@@ -10,6 +10,7 @@ import {
   hexToChannels,
   hexToSpec,
   hueToRelativeChannels,
+  validateHex,
 } from './import'
 import {
   specToHex,
@@ -28,19 +29,18 @@ import {
   funnel,
   interpolate,
   wrapAround,
-  validateHex,
 } from './utils'
 import {
   HUE_STRUCTURES,
   CHANNEL_SPECIFIC_LUM,
 } from './constants'
 import {
-  builtInTunerKit,
-  schemes,
+  noFilter,
+  CMYK,
+  UI,
 } from './preconfig'
 
 export {
-  scheme,
   getStandout,
   getOffset,
   softContrast,
@@ -64,6 +64,9 @@ export {
   validateHex,
   HUE_STRUCTURES,
   CHANNEL_SPECIFIC_LUM,
-  builtInTunerKit,
-  schemes,
+  noFilter,
+  CMYK,
+  UI,
 }
+
+export default scssPalette

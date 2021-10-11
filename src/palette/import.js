@@ -4,25 +4,29 @@ import { specificLumFromHue } from '../solveFor'
 export function mixPalette({
   hex,
   scheme,
-  palettes = { states: { base: { elements: {} } } },
-  place: [paletteIdx, stateKey, elementKey] = [0, null, null],
+  palette = { states: { base: { elements: {} } } },
+  place: [stateKey, elementKey] = [0, null, null],
 }) {
-  let palettes_ = [...palettes]
-  const palette = palettes_[paletteIdx]
+  // console.log(`hex`, hex)
+  // console.log(`| scheme`, scheme)
+  // console.log(`| palette`, palette)
+  // console.log(`| stateKey`, stateKey)
+  // console.log(`| elementKey`, elementKey)
+
+  const palette_ = { ...palette }
   const state = stateKey
-    ? palette.states[stateKey]
+    ? palette_.states[stateKey]
     : null
   const element = elementKey
     ? state.elements[elementKey]
     : null
-  const destination = element || state || palette
-  const origin = element ? state : palette
+  const destination = element || state || palette_
+  const origin = element ? state : palette_
 
   if(!origin && !hex) throw new Error('Must provide a hex')
 
   if(!origin.color) origin.color = hexToSpec(hex)
-  let color  = { ...origin.color }
-
+  const color  = { ...origin.color }
   const schemeEntries = Object.entries(scheme)
   /*
   console.log("--- from", { ...origin }.id, 'to', { ...destination }.id,
@@ -34,27 +38,13 @@ export function mixPalette({
   console.log("    ||| ops", ops)
   console.log("    ||| palette", [...palette])
   */
-  for(let idx = 0; idx < schemeEntries.length; idx++) {
-    const [key, value] = schemeEntries[idx]
+  for(const [key, value] of schemeEntries) {
     /*
     console.log("    > color", ...color)
     console.log('     ', key)
     console.log('     ', value)
     */
     switch(key) {
-      case 'color': // change colors
-        // capture currentColor in palette
-        switch(typeof value) {
-          case 'number':
-            color = hexToSpec(hex)
-            break
-          case 'string':
-            hex.unshift(value)
-            color = hexToSpec(value)
-            break
-          default: throw new Error(`'color' accepts types 'string' or 'number'; got type '${typeof value}'`)
-        }
-        break
       case 'hue':
       case 'sat':
       case 'lum':
@@ -106,44 +96,22 @@ export function mixPalette({
         if(color.lum < 0 || color.lum > 1) color.lum -= 2.5 * offset
         color.prefer = 'lum'
         break
-      case 'holds':
-        const holdsEntries = Object.entries(value)
-        for(let holdsEntryIdx = 0; holdsEntryIdx < holdsEntries.length; holdsEntryIdx++) {
-          const [subPaletteId, subPaletteScheme] = holdsEntries[holdsEntryIdx]
-          const externalElements = {}
-          const baseElementsEntries = Object.entries(palette.states.base.elements)
-          for(let baseElementsIdx = 0; baseElementsIdx < baseElementsEntries.length; baseElementsIdx++) {
-            const [baseElementKey, baseElementValue] = baseElementsEntries[baseElementsIdx]
-            externalElements[`ex-${baseElementKey}`] = baseElementValue
-          }
-          palettes_.push({
-            id: subPaletteId,
-            color: palettes_[0].color,
-            states: { base: { id: 'base', elements: externalElements } },
-          })
-          palettes_ = mixPalette({
-            palettes: palettes_,
-            hex,
-            ops: subPaletteScheme,
-            place: [palettes_.length - 1, null, null],
-          })
-        }
-        break
+
       case 'state':
         const stateEntries = Object.entries(value)
         if(!element) {
           for(let stateEntryIdx = 0; stateEntryIdx < stateEntries.length; stateEntryIdx++) {
             const [stateKey_, stateScheme] = stateEntries[stateEntryIdx]
             // console.log('    ||| stateEntry', stateKey_, stateOps)
-            palette.states[stateKey_] = {
+            palette_.states[stateKey_] = {
               id: stateKey_,
               elements: {},
             }
-            palette.states[stateKey_].color = mixPalette({
+            palette_.states[stateKey_].color = mixPalette({
               hex,
               scheme: stateScheme,
-              palettes,
-              place: [paletteIdx, stateKey_, null],
+              palette,
+              place: [stateKey_, null],
             })
             // console.log('      ', palette.states[stateKey_].hex)
           }
@@ -152,29 +120,29 @@ export function mixPalette({
             const [stateKey_, stateOps] = stateEntries[stateEntryIdx]
             // console.log('    ||| >>> stateEntry', stateKey_, stateOps)
             // console.log('    ||| >>> elementKey', elementKey)
-            const state_ = palette.states[stateKey_]
+            const state_ = palette_.states[stateKey_]
             if(!state_.elements[elementKey]) state_.elements[elementKey] = {}
-            palette.states[stateKey_].elements[elementKey].hex = mixPalette({
-              palettes,
+            palette_.states[stateKey_].elements[elementKey].hex = mixPalette({
               hex,
-              ops: stateOps,
-              place: [paletteIdx, stateKey_, elementKey],
+              scheme: stateOps,
+              palette: palette_,
+              place: [stateKey_, elementKey],
             })
           }
         } break
       default:
         const elementKey_ = key
-        const stateKeys = Object.keys(palette.states)
+        const stateKeys = Object.keys(palette_.states)
         for(let stateKeysIdx = 0; stateKeysIdx < stateKeys.length; stateKeysIdx++) {
           const stateKey_ = stateKeys[stateKeysIdx]
-          const state_ = palette.states[stateKey_]
+          const state_ = palette_.states[stateKey_]
           // console.log('    ||| state_', state_)
           state_.elements[elementKey_] = { id: elementKey_ }
           state_.elements[elementKey_].color = mixPalette({
-            palettes,
             hex,
-            ops: value,
-            place: [paletteIdx, stateKey_, elementKey_],
+            scheme: value,
+            palette,
+            place: [stateKey_, elementKey_],
           })
         }
     }
@@ -190,5 +158,44 @@ export function mixPalette({
     return color
   }
   // console.log('--- returning palettes_', palettes_)
-  return palettes_
+  // console.log(palette_)
+  return palette_
 }
+
+// case 'holds':
+//   const holdsEntries = Object.entries(value)
+//   for(let holdsEntryIdx = 0; holdsEntryIdx < holdsEntries.length; holdsEntryIdx++) {
+//     const [subPaletteId, subPaletteScheme] = holdsEntries[holdsEntryIdx]
+//     const externalElements = {}
+//     const baseElementsEntries = Object.entries(palette.states.base.elements)
+//     for(let baseElementsIdx = 0; baseElementsIdx < baseElementsEntries.length; baseElementsIdx++) {
+//       const [baseElementKey, baseElementValue] = baseElementsEntries[baseElementsIdx]
+//       externalElements[`ex-${baseElementKey}`] = baseElementValue
+//     }
+//     palettes_.push({
+//       id: subPaletteId,
+//       color: palettes_[0].color,
+//       states: { base: { id: 'base', elements: externalElements } },
+//     })
+//     palettes_ = mixPalette({
+//       palettes: palettes_,
+//       hex,
+//       ops: subPaletteScheme,
+//       place: [palettes_.length - 1, null, null],
+//     })
+//   }
+//   break
+
+// case 'color': // change colors
+//         // capture currentColor in palette
+//         switch(typeof value) {
+//           case 'number':
+//             color = hexToSpec(hex)
+//             break
+//           case 'string':
+//             hex.unshift(value)
+//             color = hexToSpec(value)
+//             break
+//           default: throw new Error(`'color' accepts types 'string' or 'number'; got type '${typeof value}'`)
+//         }
+//         break

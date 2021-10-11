@@ -1,4 +1,5 @@
 import hueToRelativeChannels from '../import/hueToRelativeChannels'
+import { CMYK } from '../preconfig'
 import {
   lumFromChannels,
   specificLumFromHue,
@@ -6,7 +7,7 @@ import {
 } from '../solveFor'
 import funnel from '../utils/funnel'
 
-export default ({ hue, sat, lum, prefer = 'sat', tuner }) => {
+export default ({ hue, sat, lum, prefer = 'sat', tuner = CMYK }) => {
   /*
   console.log('||| hue', hue)
   console.log('||| sat', sat)

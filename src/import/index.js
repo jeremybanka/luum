@@ -4,7 +4,6 @@ import hexToSpec from './hexToSpec'
 import hueToRelativeChannels from './hueToRelativeChannels'
 import validateHex from './validateHex'
 
-
 export {
   channelsToSpec,
   hexToChannels,

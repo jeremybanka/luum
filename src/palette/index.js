@@ -1,6 +1,6 @@
 import { CMYK } from "../preconfig/builtInTunerKit"
 import { UI } from "../preconfig/schemes"
-import { makeScssObject } from "./export"
+import { paletteToScssBlock } from "./export"
 import { mixPalette } from "./import"
 
 // const paletteTemplate = name => ({
@@ -8,11 +8,15 @@ import { mixPalette } from "./import"
 //   states: { base: { elements: {} } },
 // })
 
-export default function scssPalette({ hex = `#f00`, scheme = UI, tuner = CMYK }) {
+export default function scssPalette(arg) {
+  const { hex = `f00`, scheme = UI, tuner = CMYK } =
+    typeof arg === `string`
+      ? { hex: arg }
+      : arg
   const palette = mixPalette({
     hex,
     scheme,
   })
-  const scss = makeScssObject(palette, tuner)
+  const scss = paletteToScssBlock(palette, tuner)
   return scss
 }

@@ -12,7 +12,7 @@ export function parseHex(mightContainHex) {
 
 export default {
   base16CharSet: '[a-fA-F0-9]+',
-  hexec(string) {
+  exec(string) {
     const r = new RegExp(BASE_16_CHAR_SET)
     return r.exec(string) ? r.exec(string)[0] : null
   },
