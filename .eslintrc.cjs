@@ -1,6 +1,6 @@
 module.exports = {
-  extends: [`airbnb`],
-  plugins: [`jest`],
+  extends: [`airbnb-base`, `prettier`],
+  plugins: [`prettier`, `jest`],
   parser: `babel-eslint`,
   parserOptions: {
     ecmaVersion: 12,
@@ -18,6 +18,7 @@ module.exports = {
     },
   },
   rules: {
+    "prettier/prettier": [`error`],
     "arrow-parens": [`error`, `as-needed`],
     "comma-dangle": [
       `error`,
@@ -114,11 +115,7 @@ module.exports = {
         consistent: true,
       },
     ],
-    "operator-linebreak": [
-      `error`,
-      `before`,
-      { overrides: { "?": `before`, ":": `before` } },
-    ],
+    "operator-linebreak": [`error`, `before`, { overrides: { "=": `after` } }],
     "prefer-destructuring": [
       `error`,
       {
