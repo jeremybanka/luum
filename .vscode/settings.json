@@ -4,5 +4,12 @@
     "**/*.code-search": true,
     "dist": true
   },
-  "cSpell.words": ["CMYK", "desaturate", "desaturates", "Hexcode", "Luum"]
+  "cSpell.words": [
+    "CMYK",
+    "desaturate",
+    "desaturates",
+    "Hexcode",
+    "Luum",
+    "Parens"
+  ]
 }
