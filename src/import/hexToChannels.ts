@@ -1,13 +1,13 @@
-import validateHex from "./validateHex"
+import normalizeHex from "./normalizeHex"
 
 export default (maybeHex: string): ChannelObject => {
-  const hex = validateHex.parse(maybeHex)
+  const hex = normalizeHex(maybeHex)
   const getHexcodeChannel = (nameOfChannel: `b` | `g` | `r`) => {
     switch (nameOfChannel) {
       /* eslint-disable prettier/prettier */
-      case `r`: return hex.substr(1, 2)
-      case `g`: return hex.substr(3, 2)
-      case `b`: return hex.substr(5, 2)
+      case `r`: return hex.slice(0, 2)
+      case `g`: return hex.slice(2, 4)
+      case `b`: return hex.slice(4, 6)
       default: throw new Error(`strange channel name`)
       /* eslint-enable prettier/prettier */
     }
