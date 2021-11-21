@@ -32,13 +32,16 @@
     "eslint-plugin-jest": "^25.2.1",
     "eslint-plugin-prettier": "^4.0.0",
     "faker": "^5.5.3",
-    "husky": "^7.0.2",
+    "husky": "^7.0.4",
     "jest": "^27.2.5",
-    "lint-staged": "^11.2.3",
+    "lint-staged": "^12.1.1",
     "prettier": "^2.4.1",
     "ts-node": "^10.2.1",
     "tsconfig-paths": "^3.11.0",
     "typescript": "~4.4.4"
+  },
+  "lint-staged": {
+    "*.ts{,x}": "yarn lint"
   },
   "repository": {
     "type": "git",
@@ -50,13 +53,6 @@
     "javascript",
     "library"
   ],
-  "module": "src/luum.js",
-  "browser": "build/cjs-browser/luum.js",
-  "jsdelivr": "build/global/luum.min.js",
-  "unpkg": "build/global/luum.min.js",
-  "engines": {
-    "node": "*"
-  },
   "eslintConfig": {
     "extends": [
       "@banka"
