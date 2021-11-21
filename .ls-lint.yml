@@ -9,17 +9,18 @@ ls:
     .d.ts: kebab-case
     
 ignore:
+    - .eslintrc.js
     - .git
     - .github
+    - .husky
     - .idea
     - .ls-lint.yml
-    - .eslintrc.js
-    - babel.config.js
-    - jest.config.js
     - .nyc_output
-    - .husky
-    - node_modules
-    - docker
-    - dist
+    - .vscode
+    - babel.config.js
     - coverage
+    - dist
+    - docker
+    - jest.config.js
+    - node_modules
     - tsconfig.build.json
