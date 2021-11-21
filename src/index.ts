@@ -2,17 +2,14 @@ import { HUE_STRUCTURES, CHANNEL_SPECIFIC_LUM } from "./constants"
 import { noFilter, CMYK, UI } from "./constants"
 import { softContrast, hardContrast } from "./contrast"
 import { specToHex, specToHexFixLimit, gradientsToHexArrays } from "./export"
-import getOffset from "./getOffset"
-import getStandout from "./getStandout"
 import nameHue from "./identify/nameHue"
 import {
   channelsToSpec,
   hexToChannels,
   hexToSpec,
   hueToRelativeChannels,
-  validateHex,
+  normalizeHex,
 } from "./import"
-import scssPalette from "./palette"
 import {
   maxSatForHueFromTuner,
   hueFromChannels,
@@ -20,11 +17,9 @@ import {
   lumFromChannels,
   specificLumFromHue,
 } from "./solveFor"
-import { funnel, interpolate, wrapAround } from "./utils"
+import { clamp, interpolate, wrapAround } from "./utils"
 
 export {
-  getStandout,
-  getOffset,
   softContrast,
   hardContrast,
   channelsToSpec,
@@ -40,15 +35,13 @@ export {
   lumFromChannels,
   specificLumFromHue,
   nameHue,
-  funnel,
+  clamp,
   interpolate,
   wrapAround,
-  validateHex,
+  normalizeHex,
   HUE_STRUCTURES,
   CHANNEL_SPECIFIC_LUM,
   noFilter,
   CMYK,
   UI,
 }
-
-export default scssPalette
