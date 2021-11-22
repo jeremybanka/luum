@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    //f"allowJs": true,
+    //"allowJs": true,
     "baseUrl": "src",
     "paths": {
-      "@app/*": ["*"],
+      "@lib/*": ["*"],
       "@test/*": ["../test/*"]
     },
     "declaration": true,
