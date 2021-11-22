@@ -58,14 +58,6 @@
     "extends": [
       "@banka"
     ],
-    "rules": {
-      "@typescript-eslint/consistent-type-imports": [
-        "error",
-        {
-          "prefer": "type-imports"
-        }
-      ]
-    },
     "parserOptions": {
       "project": "./tsconfig.json"
     }
