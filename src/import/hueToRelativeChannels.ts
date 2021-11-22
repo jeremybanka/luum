@@ -88,13 +88,13 @@ import { wrapAround } from "../utils"
  * Citron is hue 70, which puts it near the beginning of the yellow-into-green region.
  *
  * This means its Red channel is ALMOST FULL, and its Green channel is FULL.
- * So the fullness of its Red channel is INVERSELY porportional to its
+ * So the fullness of its Red channel is INVERSELY proportional to its
  * hueDecimal, the distance from the beginning of this region: 1 - 0.167 = 0.833
  *
  * DgiYlw is hue 60, which puts it at the very beginning of the yellow-into-green region.
  *
  * This means its Red Channel and its Green channel must both be full.
- * Like Citron, the fullness of DgiYlw's Red channel is inversely proporional to its
+ * Like Citron, the fullness of DgiYlw's Red channel is inversely proportional to its
  * hueDecimal, which is 0. Therefore DgiYlw's Red channel has a fullness of 1.
  *
  * @returns array of values reflecting the spread between channels
