@@ -1,7 +1,6 @@
 import { HUE_STRUCTURES, CHANNEL_SPECIFIC_LUM } from "./constants"
 import { noFilter, CMYK, UI } from "./constants"
-import { softContrast, hardContrast } from "./contrast"
-import { specToHex, specToHexFixLimit, gradientsToHexArrays } from "./export"
+import { specToHex, specToHexFixLimit } from "./export"
 import nameHue from "./identify/nameHue"
 import {
   channelsToSpec,
@@ -20,15 +19,12 @@ import {
 import { clamp, interpolate, wrapAround } from "./utils"
 
 export {
-  softContrast,
-  hardContrast,
   channelsToSpec,
   hexToChannels,
   hexToSpec,
   hueToRelativeChannels,
   specToHex,
   specToHexFixLimit,
-  gradientsToHexArrays,
   maxSatForHueFromTuner,
   hueFromChannels,
   satFromChannels,

@@ -1,3 +1,5 @@
+import type { ChannelObject, Hex } from "@app/types"
+
 const channelsToHex = (channels: ChannelObject): Hex =>
   `#${Object.values(channels)
     .map((channel) => {

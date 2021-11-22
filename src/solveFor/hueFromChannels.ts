@@ -1,3 +1,5 @@
+import type { ChannelObject } from "@app/types"
+
 const hueFromChannels = ({ R, G, B }: ChannelObject): number => {
   let hue = 0
   if (R > G && G >= B) hue = 60 * (0 + (G - B) / (R - B))

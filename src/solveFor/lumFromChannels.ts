@@ -1,3 +1,5 @@
+import type { ChannelObject } from "@app/types"
+
 import { CHANNEL_SPECIFIC_LUM } from "../constants"
 
 const lumFromChannels = ({ R, G, B }: ChannelObject): number => {

@@ -1,5 +1,7 @@
+import type { Degree, Fraction } from "@app/types"
+
 import { wrapAround } from "../utils"
-/*eslint-disable */
+/*eslint-disable max-len */
 /**
  * Gives us the relative values of the channels,
  * irrespective of the white light beneath them.
@@ -69,32 +71,32 @@ import { wrapAround } from "../utils"
  *
  * @const {number} x - used in primary-secondary transitions like Red into Yellow
  * @const {number} y - used in secondary-primary transitions like Yellow into Green
-   * To understand the function of x and y, take the difference between
-   *
-   * Sunlgt (hue 50),
-   * Citron (hue 70),
-   * DgiYlw (hue 60),
-   *
-   * as an instructive case. These colors are all basically yellow.
-   *
-   * Sunlgt is hue 50, which puts it near the end of the red-into-yellow region.
-     *
-     * This means its Red channel is full, and its Green channel is almost full.
-     * The fullness of its Green channel is directly proportional to its
-     * hueDecimal, the distance from the beginning of this region: 0.833
-     *
-   * Citron is hue 70, which puts it near the beginning of the yellow-into-green region.
-     *
-     * This means its Red channel is ALMOST FULL, and its Green channel is FULL.
-     * So the fullness of its Red channel is INVERSELY porportional to its
-     * hueDecimal, the distance from the beginning of this region: 1 - 0.167 = 0.833
-     *
-   * DgiYlw is hue 60, which puts it at the very beginning of the yellow-into-green region.
-     *
-     * This means its Red Channel and its Green channel must both be full.
-     * Like Citron, the fullness of DgiYlw's Red channel is inversely proporional to its
-     * hueDecimal, which is 0. Therefore DgiYlw's Red channel has a fullness of 1.
-   *
+ * To understand the function of x and y, take the difference between
+ *
+ * Sunlgt (hue 50),
+ * Citron (hue 70),
+ * DgiYlw (hue 60),
+ *
+ * as an instructive case. These colors are all basically yellow.
+ *
+ * Sunlgt is hue 50, which puts it near the end of the red-into-yellow region.
+ *
+ * This means its Red channel is full, and its Green channel is almost full.
+ * The fullness of its Green channel is directly proportional to its
+ * hueDecimal, the distance from the beginning of this region: 0.833
+ *
+ * Citron is hue 70, which puts it near the beginning of the yellow-into-green region.
+ *
+ * This means its Red channel is ALMOST FULL, and its Green channel is FULL.
+ * So the fullness of its Red channel is INVERSELY porportional to its
+ * hueDecimal, the distance from the beginning of this region: 1 - 0.167 = 0.833
+ *
+ * DgiYlw is hue 60, which puts it at the very beginning of the yellow-into-green region.
+ *
+ * This means its Red Channel and its Green channel must both be full.
+ * Like Citron, the fullness of DgiYlw's Red channel is inversely proporional to its
+ * hueDecimal, which is 0. Therefore DgiYlw's Red channel has a fullness of 1.
+ *
  * @returns array of values reflecting the spread between channels
  *
  * DgiRed  case 0:  [   R ===== 1       G = x = 0.000   B ===== 0      ]
@@ -109,7 +111,7 @@ import { wrapAround } from "../utils"
  *
  * here we see detailed breakdowns of the function's final output for our running examples.
  */
-/* eslint-enable */
+/* eslint-enable max-len */
 export default (hue: Degree): [r: Fraction, g: Fraction, b: Fraction] => {
   hue = wrapAround(hue, [0, 360])
   const hueReduced = hue / 60

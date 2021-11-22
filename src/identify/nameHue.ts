@@ -1,3 +1,5 @@
+import type { Degree } from "@app/types"
+
 import { wrapAround } from "../utils"
 
 type NamingPoint = { hue: Degree; name: string }
