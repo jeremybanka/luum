@@ -1,3 +1,5 @@
+import type { ChannelObject } from "@app/types"
+
 import normalizeHex from "./normalizeHex"
 
 export default (maybeHex: string): ChannelObject => {

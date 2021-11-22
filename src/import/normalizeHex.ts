@@ -1,3 +1,5 @@
+import type { Hex } from "@app/types"
+
 const BASE_16_CHAR_SET = `[a-fA-F0-9]+`
 
 const miniHexToHex = (miniHex: string): Hex => {

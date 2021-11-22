@@ -1,3 +1,12 @@
+import type {
+  ChannelObject,
+  Degree,
+  Fraction,
+  LuumSpec,
+  OutOf255,
+  Range,
+} from "@app/types"
+
 import { CMYK } from "../constants"
 import hueToRelativeChannels from "../import/hueToRelativeChannels"
 import {

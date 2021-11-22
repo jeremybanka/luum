@@ -1,3 +1,5 @@
+import type { Fraction } from "@app/types"
+
 type Interpolate = (args: {
   completionRatio: Fraction
   range: [to: number, from: number]

@@ -1,3 +1,5 @@
+import type { ColorTuner, Degree } from "@app/types"
+
 import { wrapAround } from "../utils"
 
 export default (hue: Degree, tuner: ColorTuner): number => {

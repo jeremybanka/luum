@@ -1,3 +1,5 @@
+import type { Hex, LuumFix, LuumLimit, LuumSpec } from "@app/types"
+
 import channelsToHex from "./channelsToHex"
 import specToChannels from "./specToChannelsFixLimit"
 

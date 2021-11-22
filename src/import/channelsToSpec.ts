@@ -1,3 +1,5 @@
+import type { ChannelObject, HSL } from "@app/types"
+
 import { hueFromChannels, satFromChannels, lumFromChannels } from "../solveFor"
 
 const channelsToSpec = ({ R, G, B }: ChannelObject): HSL => {

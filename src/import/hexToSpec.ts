@@ -1,3 +1,5 @@
+import type { HSL } from "@app/types"
+
 import channelsToSpec from "./channelsToSpec"
 import hexToChannels from "./hexToChannels"
 
