@@ -1,4 +1,4 @@
-import type { ChannelObject } from "@app/types"
+import type { ChannelObject } from "@lib/index"
 
 import normalizeHex from "./normalizeHex"
 

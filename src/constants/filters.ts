@@ -1,8 +1,10 @@
-export const noFilter = [
+import type { Filter } from "@lib/index"
+
+export const unfiltered: Filter = [
   { sat: 255, hue: 0 },
   { sat: 255, hue: 360 },
 ]
-export const CMYK = [
+export const CMYK: Filter = [
   { sat: 255, hue: 55 },
   { sat: 127, hue: 120 },
   { sat: 255, hue: 200 },

@@ -1,4 +1,4 @@
-import type { Hex } from "@app/types"
+import type { Hex } from "@lib/index"
 
 const BASE_16_CHAR_SET = `[a-fA-F0-9]+`
 
