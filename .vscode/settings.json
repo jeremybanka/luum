@@ -10,6 +10,8 @@
     "desaturates",
     "Hexcode",
     "Luum",
-    "Parens"
+    "Parens",
+    "prebuild",
+    "prelint"
   ]
 }
