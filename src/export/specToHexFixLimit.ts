@@ -1,4 +1,4 @@
-import type { Hex, LuumFix, LuumLimit, LuumSpec } from "@app/types"
+import type { Hex, LuumFix, LuumLimit, LuumSpec } from "@lib/index"
 
 import channelsToHex from "./channelsToHex"
 import specToChannels from "./specToChannelsFixLimit"
@@ -14,14 +14,14 @@ const specToHexFixLimit: SpecToHexFixLimit = ({
   sat,
   lum,
   prefer,
-  tuner,
+  filter,
 }) => {
   const { channels, fix, limit } = specToChannels({
     hue,
     sat,
     lum,
     prefer,
-    tuner,
+    filter,
   })
   const { R, G, B } = channels
   const hex = channelsToHex({ R, G, B })

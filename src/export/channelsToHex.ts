@@ -1,4 +1,4 @@
-import type { ChannelObject, Hex } from "@app/types"
+import type { ChannelObject, Hex } from "@lib/index"
 
 const channelsToHex = (channels: ChannelObject): Hex =>
   `#${Object.values(channels)

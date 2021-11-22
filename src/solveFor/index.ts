@@ -1,11 +1,11 @@
 import hueFromChannels from "./hueFromChannels"
 import lumFromChannels from "./lumFromChannels"
-import maxSatForHueFromTuner from "./maxSatForHueFromTuner"
+import maxSatForHueInFilter from "./maxSatForHueInFilter"
 import satFromChannels from "./satFromChannels"
 import specificLumFromHue from "./specificLumFromHue"
 
 export {
-  maxSatForHueFromTuner,
+  maxSatForHueInFilter,
   hueFromChannels,
   satFromChannels,
   lumFromChannels,

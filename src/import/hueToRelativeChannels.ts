@@ -1,4 +1,4 @@
-import type { Degree, Fraction } from "@app/types"
+import type { Degree, Fraction } from "@lib/index"
 
 import { wrapAround } from "../utils"
 /*eslint-disable max-len */

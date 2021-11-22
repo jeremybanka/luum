@@ -1,18 +1,18 @@
-import type { ColorTuner, Degree } from "@app/types"
+import type { Filter, Degree } from "@lib/index"
 
 import { wrapAround } from "../utils"
 
-export default (hue: Degree, tuner: ColorTuner): number => {
+export default (hue: Degree, filter: Filter): number => {
   // 430
   let maxSat = 255
   const hueWrapped = wrapAround(hue, [0, 360]) // 70
-  for (let a = -1, b = 0; b < tuner.length; a++, b++) {
-    a = wrapAround(a, [0, tuner.length])
+  for (let a = -1, b = 0; b < filter.length; a++, b++) {
+    a = wrapAround(a, [0, filter.length])
     // console.log('||| a =', a, 'b =', b)
     const hueDoubleWrapped =
       a > b ? wrapAround(hueWrapped, [-180, 180]) : undefined // undef
-    const tuningPointA = tuner[a]
-    const tuningPointB = tuner[b]
+    const tuningPointA = filter[a]
+    const tuningPointB = filter[b]
     const hueA =
       a > b ? wrapAround(tuningPointA.hue, [-180, 180]) : tuningPointA.hue
     const hueB = tuningPointB.hue

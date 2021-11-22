@@ -1,4 +1,4 @@
-import type { Degree } from "@app/types"
+import type { Degree } from "@lib/index"
 
 import { wrapAround } from "../utils"
 

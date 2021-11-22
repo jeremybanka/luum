@@ -5,14 +5,14 @@ import type {
   LuumSpec,
   OutOf255,
   Range,
-} from "@app/types"
+} from "@lib/index"
 
-import { CMYK } from "../constants"
+import { CMYK } from "../constants/filters"
 import hueToRelativeChannels from "../import/hueToRelativeChannels"
 import {
   lumFromChannels,
   specificLumFromHue,
-  maxSatForHueFromTuner,
+  maxSatForHueInFilter,
 } from "../solveFor"
 import { clamp } from "../utils"
 
@@ -63,7 +63,7 @@ const specToChannelsFixLimit: SpecToChannelsFixLimit = ({
   sat,
   lum,
   prefer = `sat`,
-  tuner = CMYK,
+  filter = CMYK,
 }) => {
   const minChannelsForSaturation = minChannelsForSaturationFromHue(hue)
 
@@ -74,7 +74,7 @@ const specToChannelsFixLimit: SpecToChannelsFixLimit = ({
   let specificLum: Fraction
   let minLum = 0
   let maxLum = 1
-  let maxSat = maxSatForHueFromTuner(hue, tuner)
+  let maxSat = maxSatForHueInFilter(hue, filter)
 
   switch (prefer) {
     case `sat`:
