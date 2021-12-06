@@ -22,7 +22,7 @@ module.exports = (api, targets) => {
         `babel-plugin-root-import`,
         {
           rootPathSuffix: `./src`,
-          rootPathPrefix: `@lib/`,
+          rootPathPrefix: `~/`,
         },
       ],
     ],
