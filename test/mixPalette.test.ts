@@ -1,24 +1,24 @@
 import type { LuumSpec } from "~"
 
-import type { InteractiveScheme } from "~/scheme"
+import type { InteractiveScheme, NonInteractiveScheme } from "~/scheme"
 import { paletteToScssRule } from "~/scheme"
 import { mixPalette } from "~/scheme/import"
 
-describe(`mixPalette`, () => {
-  it(`should return the same hex if no scheme is provided`, () => {
-    const blue: LuumSpec = {
-      hue: 200,
-      sat: 255,
-      lum: 0,
-      prefer: `lum`,
-    }
+const BLUE: LuumSpec = {
+  hue: 200,
+  sat: 255,
+  lum: 0,
+  prefer: `lum`,
+}
 
+describe(`mixPalette`, () => {
+  it(`renders css with hover and active attributes`, () => {
     const scheme: InteractiveScheme = {
-      root: [[`spec`, blue]],
+      root: [[`spec`, BLUE]],
       attributes: {
         "--color-bg": {
-          base: [[`lum`, 95]],
-          hover: [[`lum`, 100]],
+          base: [[`lum`, 95 / 100]],
+          hover: [[`lum`, 1]],
           active: [[`prefer`, `sat`]],
           disabled: [[`lum`, 0]],
         },
@@ -38,5 +38,23 @@ describe(`mixPalette`, () => {
     const css = paletteToScssRule(`input[type="whatever"]`, palette)
     console.log(css)
     //    expect(palette).toBeCloseTo(150)
+  })
+  it(`renders child rules`, () => {
+    const scheme: NonInteractiveScheme = {
+      root: [[`spec`, BLUE]],
+      attributes: {
+        "--color-bg": [[`lum`, 95 / 100]],
+      },
+      children: {
+        "div.foo": {
+          attributes: {
+            "--color-bg": [[`lum`, 85 / 100]],
+          },
+        },
+      },
+    }
+    const palette = mixPalette(scheme)
+    const css = paletteToScssRule(`input[type="whatever"]`, palette)
+    console.log(css)
   })
 })
