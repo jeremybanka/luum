@@ -1,4 +1,4 @@
-import type { ChannelObject } from "@lib/index"
+import type { ChannelObject } from "~"
 
 const satFromChannels = ({ R, G, B }: ChannelObject): number => {
   const sat = Math.max(R, G, B) - Math.min(R, G, B)

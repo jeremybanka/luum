@@ -1,4 +1,4 @@
-import type { Degree } from "@lib/index"
+import type { Degree } from "~"
 
 import { wrapAround } from "../utils"
 
@@ -20,7 +20,7 @@ const rangeNames: NamingPoint[] = [
   { hue: 350, name: `pink` },
 ]
 
-export default (hue: Degree): string => {
+const identifyHue = (hue: Degree): string => {
   // console.log('||| hue', hue)
   const hueWrapped = wrapAround(hue, [0, 360])
   const { name } =
@@ -33,3 +33,5 @@ export default (hue: Degree): string => {
       */
   return name
 }
+
+export { identifyHue }

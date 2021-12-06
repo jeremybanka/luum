@@ -1,8 +1,13 @@
-import type { Hex, LuumSpec } from "@lib/index"
+import type { Filter, Hex, LuumSpec } from "~"
 
 import specToHexFixLimit from "./specToHexFixLimit"
 
-export default ({ hue, sat, lum, prefer, filter }: LuumSpec): Hex => {
-  const { hex } = specToHexFixLimit({ hue, sat, lum, prefer, filter })
+const specToHex = (
+  { hue, sat, lum, prefer }: LuumSpec,
+  filter?: Filter
+): Hex => {
+  const { hex } = specToHexFixLimit({ hue, sat, lum, prefer }, filter)
   return hex
 }
+
+export default specToHex

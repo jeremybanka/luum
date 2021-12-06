@@ -1,4 +1,4 @@
-import type { Fraction } from "@lib/index"
+import type { Fraction } from "~"
 
 type Interpolate = (args: {
   completionRatio: Fraction

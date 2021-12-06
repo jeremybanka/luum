@@ -1,5 +1,7 @@
-import { hexToSpec } from "@lib/import"
-import type { LuumSpec } from "@lib/index"
+import type { LuumSpec } from "~"
+
+import { specToHexFixLimit } from "~/export"
+import { hexToSpec } from "~/import"
 
 import contrast from "./contrast"
 import { setHue, split, tetra, trine } from "./hue"
@@ -13,6 +15,7 @@ export type MixerArgs = {
   sat: number
   lum: number
   prefer: `lum` | `sat`
+  fix: `lum` | `sat`
   contrast: 0 | 1 | 2
   amp: number
   mute: number
@@ -37,11 +40,16 @@ const mixers: {
   [Name in MixerName]: Mixer<MixerArgs[Name]>
 } = {
   hex: (color, value) => ({ ...color, ...hexToSpec(value) }),
-  spec: (color, value) => ({ ...value, filter: color.filter }),
+  spec: (_, value) => ({ ...value }),
   hue: setHue,
   sat: setSat,
   lum: setLum,
-  prefer: (color, value) => ({ ...color, prefer: value }),
+  fix: (color, prefer) => ({
+    ...color,
+    prefer,
+    ...specToHexFixLimit({ ...color, prefer }).fix,
+  }),
+  prefer: (color, prefer) => ({ ...color, prefer }),
   amp,
   contrast,
   mute,
