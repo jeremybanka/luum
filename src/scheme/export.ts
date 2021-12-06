@@ -5,12 +5,13 @@ import type {
   Palette,
   Scheme,
 } from "."
+import { mixPalette } from "."
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const isInteractivePalette = (
   palette: Palette<any>
 ): palette is InteractivePalette<any> =>
-  !Array.isArray(Object.values(palette.attributes)[0])
+  !Object.values(palette.attributes)[0].dry
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 const indent = (indent = 1, text: string) => ` `.repeat(indent * 2) + text
@@ -102,4 +103,12 @@ export const paletteToScssRule = (
   scssBlock += nestChildRules(palette, generation)
   scssBlock += closeCssRule(generation)
   return scssBlock
+}
+
+export type SchemeToScssRule = (selector: CssSelector, scheme: Scheme) => string
+
+export const schemeToScssRule: SchemeToScssRule = (selector, scheme) => {
+  const palette = mixPalette(scheme)
+  const scss = paletteToScssRule(selector, palette)
+  return scss
 }
