@@ -3,7 +3,8 @@
     //"allowJs": true,
     "baseUrl": "src",
     "paths": {
-      "@lib/*": ["*"],
+      "~": ["."],
+      "~/*": ["*"],
       "@test/*": ["../test/*"]
     },
     "declaration": true,
