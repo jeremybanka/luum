@@ -1,5 +1,5 @@
-import type { Mix } from "@lib/mixers"
-import type { Swatch } from "@lib/scheme"
+import type { Mix } from "~/mixers"
+import type { Swatch } from "~/scheme"
 
 import { mixNewSwatch } from "../src/scheme/import"
 
@@ -14,8 +14,8 @@ describe(`mixNewSwatch`, () => {
       [`prefer`, `lum`],
       [`contrast`, 1],
     ]
-    const newSwatch = mixNewSwatch(swatch, mix)
-    console.log(newSwatch)
+    const newSwatch = mixNewSwatch(swatch.wet, mix)
+    // console.log(newSwatch)
     expect(newSwatch.wet.hue).toBeCloseTo(150)
   })
 })
