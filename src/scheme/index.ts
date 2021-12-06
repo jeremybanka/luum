@@ -1,62 +1,232 @@
-import type { Filter, Hex, LuumSpec } from "@lib/index"
-import type { Mix } from "@lib/mixers"
+import type { Filter, Hex, LuumSpec } from "~"
 
-// import { CMYK } from "../constants/tuners"
-// import { UI } from "../constants/schemes"
-// import { paletteToScssBlock } from "./export"
+import type { Mix } from "~/mixers"
 
-type States = {
-  base: Mix
-  hover: Mix
-  active: Mix
-  disabled: Mix
-}
+export type InteractiveStates = `active` | `base` | `disabled` | `hover`
 
-export type Scheme = {
+export type HTMLElementName =
+  | `a`
+  | `abbr`
+  | `address`
+  | `area`
+  | `article`
+  | `aside`
+  | `audio`
+  | `b`
+  | `base`
+  | `bdi`
+  | `bdo`
+  | `big`
+  | `blockquote`
+  | `body`
+  | `br`
+  | `button`
+  | `canvas`
+  | `caption`
+  | `cite`
+  | `code`
+  | `col`
+  | `colgroup`
+  | `data`
+  | `datalist`
+  | `dd`
+  | `del`
+  | `details`
+  | `dfn`
+  | `dialog`
+  | `div`
+  | `dl`
+  | `dt`
+  | `em`
+  | `embed`
+  | `fieldset`
+  | `figcaption`
+  | `figure`
+  | `footer`
+  | `form`
+  | `h1`
+  | `h2`
+  | `h3`
+  | `h4`
+  | `h5`
+  | `h6`
+  | `head`
+  | `header`
+  | `hgroup`
+  | `hr`
+  | `html`
+  | `i`
+  | `iframe`
+  | `img`
+  | `input`
+  | `ins`
+  | `kbd`
+  | `keygen`
+  | `label`
+  | `legend`
+  | `li`
+  | `link`
+  | `main`
+  | `map`
+  | `mark`
+  | `menu`
+  | `menuitem`
+  | `meta`
+  | `meter`
+  | `nav`
+  | `noscript`
+  | `object`
+  | `ol`
+  | `optgroup`
+  | `option`
+  | `output`
+  | `p`
+  | `param`
+  | `picture`
+  | `pre`
+  | `progress`
+  | `q`
+  | `rp`
+  | `rt`
+  | `ruby`
+  | `s`
+  | `samp`
+  | `script`
+  | `section`
+  | `select`
+  | `small`
+  | `source`
+  | `span`
+  | `strong`
+  | `style`
+  | `sub`
+  | `summary`
+  | `sup`
+  | `table`
+  | `tbody`
+  | `td`
+  | `textarea`
+  | `tfoot`
+  | `th`
+  | `thead`
+  | `time`
+  | `title`
+  | `tr`
+  | `track`
+  | `u`
+  | `ul`
+  | `var`
+  | `video`
+  | `wbr`
+
+export type CssSelector =
+  | HTMLElementName
+  | `.${string}`
+  | `* ${string}`
+  | `*`
+  | `&::${`after` | `before`}`
+  | `&:${`active` | `disabled` | `focus-within` | `focus` | `hover`}`
+  | `&.${string}`
+  | `&[type=${string}]`
+  | `&#${string}`
+  | `#${string}`
+  | `+ ${string}`
+  | `> ${string}`
+  | `~ ${string}`
+  | `${HTMLElementName} ${HTMLElementName}`
+  | `${HTMLElementName}::${`after` | `before`}`
+  | `${HTMLElementName}::${`first-letter` | `first-line`}`
+  | `${HTMLElementName}::${`selection`}`
+  | `${HTMLElementName}.${string}`
+  | `${HTMLElementName}#${string}`
+  | `input[type="${string}"]`
+
+export type CssColorPropertyKeys =
+  | `--color-${string}`
+  | `background-color`
+  | `background`
+  | `border-bottom-color`
+  | `border-color`
+  | `border-left-color`
+  | `border-right-color`
+  | `border-top-color`
+  | `border`
+  | `box-shadow`
+  | `caret-color`
+  | `color`
+  | `column-rule-color`
+  | `column-rule`
+  | `filter`
+  | `opacity`
+  | `outline-color`
+  | `outline`
+  | `text-decoration-color`
+  | `text-decoration`
+  | `text-shadow`
+
+export type InteractiveMix = Record<InteractiveStates, Mix>
+
+export type InteractiveSwatch = Record<InteractiveStates, Swatch>
+
+export type InteractiveScheme = {
   root?: Mix
   filter?: Filter
-  states?: States
-  variables?: Record<string, Mix | States>
+  attributes: Partial<Record<CssColorPropertyKeys, InteractiveMix>>
+  children?: Record<string, InteractiveScheme>
+}
+
+export type NonInteractiveScheme = {
+  root?: Mix
+  filter?: Filter
+  attributes: Partial<Record<CssColorPropertyKeys, Mix>>
   children?: Record<string, Scheme>
 }
 
-export type Swatch = { wet: LuumSpec; dry?: Hex }
+export type Scheme = InteractiveScheme | NonInteractiveScheme
 
-export type Palette<S extends Scheme> = {
-  root: S[`root`] extends undefined ? undefined : Hex
-  states: S[`states`] extends undefined
+export type Swatch = { wet: LuumSpec; dry: Hex }
+
+export type NonInteractivePalette<S extends NonInteractiveScheme> = {
+  attributes: {
+    [K in keyof S[`attributes`]]: Swatch
+  }
+  children?: S[`children`] extends undefined
     ? undefined
     : {
-        base: Swatch
-        hover: Swatch
-        active: Swatch
-        disabled: Swatch
-      }
-  variables: S[`variables`] extends undefined
-    ? undefined
-    : {
-        [K in keyof S[`variables`]]: S[`variables`][K] extends Mix
-          ? Hex
-          : {
-              base: Swatch
-              hover: Swatch
-              active: Swatch
-              disabled: Swatch
-            }
-      }
-  children: S[`children`] extends undefined
-    ? undefined
-    : {
-        [K in keyof S[`children`]]: Palette<S[`children`][K]>
+        [K in keyof S[`children`]]: S[`children`][K] extends NonInteractiveScheme
+          ? NonInteractivePalette<S[`children`][K]>
+          : S[`children`][K] extends InteractiveScheme
+          ? InteractivePalette<S[`children`][K]>
+          : never
       }
 }
 
-export interface FileScheme extends Scheme {
+export type InteractivePalette<S extends InteractiveScheme> = {
+  attributes: {
+    [K in keyof S[`attributes`]]: InteractiveSwatch
+  }
+  children?: S[`children`] extends undefined
+    ? undefined
+    : {
+        [K in keyof S[`children`]]: S[`children`][K] extends InteractiveScheme
+          ? InteractivePalette<S[`children`][K]>
+          : never
+      }
+}
+
+export type Palette<S extends Scheme> = S extends NonInteractiveScheme
+  ? NonInteractivePalette<S>
+  : S extends InteractiveScheme
+  ? InteractivePalette<S>
+  : never
+
+export interface FileScheme extends NonInteractiveScheme {
   file?: string
   root: Mix
 }
 
-export interface FilePalette<S extends FileScheme> extends Palette<S> {
+export interface FilePalette<S extends FileScheme>
+  extends NonInteractivePalette<S> {
   file: S[`file`] extends undefined ? undefined : string
 }
 
@@ -67,3 +237,6 @@ export interface FilePalette<S extends FileScheme> extends Palette<S> {
 //   const scss = paletteToScssBlock(palette, filter)
 //   return scss
 // }
+
+export * from "./export"
+export * from "./import"

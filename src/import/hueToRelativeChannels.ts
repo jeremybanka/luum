@@ -1,49 +1,50 @@
-import type { Degree, Fraction } from "@lib/index"
+import type { Degree, Fraction } from "~"
 
 import { wrapAround } from "../utils"
+
 /*eslint-disable max-len */
 /**
  * Gives us the relative values of the channels,
  * irrespective of the white light beneath them.
  * @param {number} hue - in degrees. Gets safely wrapped around first thing.
  *
- * DgiRed    0 ->   0
+ * Digital Red      0 ->   0
  *
- * Sunlgt   50 ->  50
+ * Sunlight         50 ->  50
  *
- * DgiYlw   60 ->  60
+ * Digital Yellow   60 ->  60
  *
- * Citron   70 ->  70
+ * Citron           70 ->  70
  *
- * Turqse  510 -> 150
+ * Turquoise        510 -> 150
  *
  * @const {number} hueReduced - hue 0-359.9 is now a floating point 0-5.999.
  *
- * DgiRed    0 ->   0  ~  0.000
+ * Digital Red    0 ->   0  ~  0.000
  *
- * Sunlgt   50 -> 5/6  ~  0.833
+ * Sunlight       50 -> 5/6  ~  0.833
  *
- * DgiYlw   60 ->   1  ~  1.000
+ * Digital Yellow 60 ->   1  ~  1.000
  *
- * Citron   70 -> 7/6  ~  1.167
+ * Citron         70 -> 7/6  ~  1.167
  *
- * Turqse  150 -> 5/2  ~  2.500
+ * Turquoise      150 -> 5/2  ~  2.500
  *
  * @const {number} hueInteger - from 1-6. Tells us what color region we are in.
  *
- * DgiRed  0.000 -> 0
+ * Digital Red    0.000 -> 0
  *                : red-into-yellow region
  *
- * Sunlgt  0.833 -> 0
+ * Sunlight       0.833 -> 0
  *                : red-into-yellow region
  *
- * DgiYlw  1.000 -> 1
+ * Digital Yellow 1.000 -> 1
  *                : yellow-into-green region
  *
- * Citron  1.167 -> 1
+ * Citron         1.167 -> 1
  *                : yellow-into-green region
  *
- * Turqse  2.500 -> 2
+ * Turquoise      2.500 -> 2
  *                : green-into-cyan region
  *
  * hueInteger is the 'whole number' piece of hueReduced.
@@ -51,19 +52,19 @@ import { wrapAround } from "../utils"
  *
  * @const {number} hueDecimal - tells where we are in this region.
  *
- * DgiRed  0.000 -> 0.000
+ * Digital Red    0.000 -> 0.000
  *                : at the very beginning
  *
- * Sunlgt  0.833 -> 0.833
+ * Sunlight       0.833 -> 0.833
  *                : near the end
  *
- * DgiYlw  1.000 -> 0.000
+ * Digital Yellow 1.000 -> 0.000
  *                : at the very beginning
  *
- * Citron  1.167 -> 0.167
+ * Citron         1.167 -> 0.167
  *                : near the beginning
  *
- * Turqse  2.500 -> 0.500
+ * Turquoise      2.500 -> 0.500
  *                : at the halfway point
  *
  * hueDecimal is the 'fraction' piece of hueReduced.
@@ -73,13 +74,13 @@ import { wrapAround } from "../utils"
  * @const {number} y - used in secondary-primary transitions like Yellow into Green
  * To understand the function of x and y, take the difference between
  *
- * Sunlgt (hue 50),
- * Citron (hue 70),
- * DgiYlw (hue 60),
+ * Sunlight       (hue 50),
+ * Citron         (hue 70),
+ * Digital Yellow (hue 60),
  *
  * as an instructive case. These colors are all basically yellow.
  *
- * Sunlgt is hue 50, which puts it near the end of the red-into-yellow region.
+ * Sunlight is hue 50, which puts it near the end of the red-into-yellow region.
  *
  * This means its Red channel is full, and its Green channel is almost full.
  * The fullness of its Green channel is directly proportional to its
@@ -91,23 +92,23 @@ import { wrapAround } from "../utils"
  * So the fullness of its Red channel is INVERSELY proportional to its
  * hueDecimal, the distance from the beginning of this region: 1 - 0.167 = 0.833
  *
- * DgiYlw is hue 60, which puts it at the very beginning of the yellow-into-green region.
+ * Digital Yellow is hue 60, which puts it at the very beginning of the yellow-into-green region.
  *
  * This means its Red Channel and its Green channel must both be full.
- * Like Citron, the fullness of DgiYlw's Red channel is inversely proportional to its
- * hueDecimal, which is 0. Therefore DgiYlw's Red channel has a fullness of 1.
+ * Like Citron, the fullness of Digital Yellow's Red channel is inversely proportional to its
+ * hueDecimal, which is 0. Therefore Digital Yellow's Red channel has a fullness of 1.
  *
  * @returns array of values reflecting the spread between channels
  *
- * DgiRed  case 0:  [   R ===== 1       G = x = 0.000   B ===== 0      ]
+ * Digital Red    case 0:  [   R ===== 1       G = x = 0.000   B ===== 0      ]
  *
- * Sunlgt  case 0:  [   R ===== 1       G = x = 0.833   B ===== 0      ]
+ * Sunlight       case 0:  [   R ===== 1       G = x = 0.833   B ===== 0      ]
  *
- * DgiYlw  case 1:  [   R = y = 1.000   G ===== 1       B ===== 0      ]
+ * DigitalYellow  case 1:  [   R = y = 1.000   G ===== 1       B ===== 0      ]
  *
- * Citron  case 1:  [   R = y = 0.833   G ===== 1       B ===== 0      ]
+ * Citron         case 1:  [   R = y = 0.833   G ===== 1       B ===== 0      ]
  *
- * Turqse  case 2:  [   R ===== 0       G ===== 1       B = x = 0.500  ]
+ * Turquoise      case 2:  [   R ===== 0       G ===== 1       B = x = 0.500  ]
  *
  * here we see detailed breakdowns of the function's final output for our running examples.
  */

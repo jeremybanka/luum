@@ -1,4 +1,4 @@
-import type { HSL } from "@lib/index"
+import type { HSL } from "~"
 
 import channelsToSpec from "./channelsToSpec"
 import hexToChannels from "./hexToChannels"

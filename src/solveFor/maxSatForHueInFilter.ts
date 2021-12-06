@@ -1,4 +1,4 @@
-import type { Filter, Degree } from "@lib/index"
+import type { Filter, Degree } from "~"
 
 import { wrapAround } from "../utils"
 

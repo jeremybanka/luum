@@ -1,4 +1,4 @@
-import type { Filter } from "@lib/index"
+import type { Filter } from "~"
 
 export const unfiltered: Filter = [
   { sat: 255, hue: 0 },

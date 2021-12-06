@@ -1,13 +1,14 @@
 import type {
   ChannelObject,
   Degree,
+  Filter,
   Fraction,
   LuumSpec,
   OutOf255,
   Range,
-} from "@lib/index"
+} from "~"
 
-import { CMYK } from "../constants/filters"
+import { unfiltered } from "../constants/filters"
 import hueToRelativeChannels from "../import/hueToRelativeChannels"
 import {
   lumFromChannels,
@@ -52,19 +53,19 @@ const channelsFromIlluminationObj = ({
   return channels
 }
 
-type SpecToChannelsFixLimit = (spec: LuumSpec) => {
+type SpecToChannelsFixLimit = (
+  spec: LuumSpec,
+  filter?: Filter
+) => {
   channels: ChannelObject
   fix: { sat: number; lum: number }
   limit: { sat: Range; lum: Range }
 }
 
-const specToChannelsFixLimit: SpecToChannelsFixLimit = ({
-  hue,
-  sat,
-  lum,
-  prefer = `sat`,
-  filter = CMYK,
-}) => {
+const specToChannelsFixLimit: SpecToChannelsFixLimit = (
+  { hue, sat, lum, prefer = `lum` },
+  filter = unfiltered
+) => {
   const minChannelsForSaturation = minChannelsForSaturationFromHue(hue)
 
   let trueSaturation: OutOf255

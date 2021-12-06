@@ -1,4 +1,4 @@
-import type { ChannelObject } from "@lib/index"
+import type { ChannelObject } from "~"
 
 import { CHANNEL_SPECIFIC_LUM } from "../constants"
 

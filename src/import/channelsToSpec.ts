@@ -1,4 +1,4 @@
-import type { ChannelObject, HSL } from "@lib/index"
+import type { ChannelObject, HSL } from "~"
 
 import { hueFromChannels, satFromChannels, lumFromChannels } from "../solveFor"
 

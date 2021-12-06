@@ -1,4 +1,4 @@
-import type { ChannelObject } from "@lib/index"
+import type { ChannelObject } from "~"
 
 const hueFromChannels = ({ R, G, B }: ChannelObject): number => {
   let hue = 0
