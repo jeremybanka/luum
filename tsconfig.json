@@ -3,6 +3,7 @@
     //"allowJs": true,
     "baseUrl": "src",
     "paths": {
+      "~": ["."],
       "~/*": ["*"],
       "@test/*": ["../test/*"]
     },
