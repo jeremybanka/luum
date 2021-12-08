@@ -8,9 +8,12 @@
     "CMYK",
     "desaturate",
     "desaturates",
+    "esbuild",
     "Hexcode",
     "Luum",
+    "outfile",
     "Parens",
+    "postbuild",
     "prebuild",
     "prelint"
   ]
