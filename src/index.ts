@@ -39,7 +39,6 @@ export type HSL = {
 
 export interface LuumSpec extends HSL {
   prefer: `lum` | `sat`
-  //filter?: Filter
 }
 
 export type LuumFix = { sat: number; lum: number }

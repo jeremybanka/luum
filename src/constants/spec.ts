@@ -1,4 +1,3 @@
-// import { CMYK } from "./filters"
 import type { LuumSpec } from "~"
 
 export const defaultSpec: LuumSpec = {
@@ -6,5 +5,4 @@ export const defaultSpec: LuumSpec = {
   lum: 0,
   sat: 0,
   prefer: `lum`,
-  // filter: CMYK,
 }
