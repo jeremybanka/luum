@@ -34,6 +34,6 @@
     "test",
     "jest.config.js",
     "babel.config.js",
-    "esbuild.config.ts"
+    "esbuild.config.js"
   ]
 }
