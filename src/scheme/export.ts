@@ -18,8 +18,9 @@ const indent = (indent = 1, text: string) => ` `.repeat(indent * 2) + text
 
 const openCssRule = (gen = 0, ...selectors: CssSelector[]): string =>
   selectors.length > 1
-    ? selectors.reduce<string>((acc, selector) => {
-        return `\n` + indent(gen, selector) + `,` + acc
+    ? selectors.reduce<string>((acc, selector, idx) => {
+        const maybeComma = idx === 0 ? `` : `,`
+        return `\n` + indent(gen, selector) + maybeComma + acc
       }, ``) + ` {\n`
     : `${indent(gen, `${selectors[0]} {\n`)}`
 
