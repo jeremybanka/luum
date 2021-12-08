@@ -65,7 +65,7 @@
     }
   },
   "license": "MIT",
-  "sideEffects": "false",
+  "sideEffects": false,
   "author": "Jeremy Banka",
   "bugs": {
     "url": "https://github.com/jeremybanka/luum/issues"
