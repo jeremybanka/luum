@@ -12,9 +12,8 @@
     "prelint": "ls-lint",
     "lint": "eslint \"{src,test}/**/*.ts{,x}\"",
     "lint!": "yarn lint -- --fix",
-    "prebuild": "rm -rf dist && tsc --project tsconfig.build.json",
-    "build": "node esbuild.config.js",
-    "postbuild": "rm esbuild.config.js"
+    "prebuild": "rm -rf dist",
+    "build": "node esbuild.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
