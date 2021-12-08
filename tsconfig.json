@@ -3,7 +3,6 @@
     //"allowJs": true,
     "baseUrl": "src",
     "paths": {
-      "~": ["."],
       "~/*": ["*"],
       "@test/*": ["../test/*"]
     },
@@ -29,5 +28,11 @@
     "strictNullChecks": true,
     "target": "ES2019"
   },
-  "include": ["src", "test", "jest.config.js", "babel.config.js"]
+  "include": [
+    "src",
+    "test",
+    "jest.config.js",
+    "babel.config.js",
+    "esbuild.config.ts"
+  ]
 }
