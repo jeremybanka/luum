@@ -2,7 +2,7 @@
   "name": "luum",
   "version": "0.0.12",
   "description": "generate colors dynamically",
-  "main": "dist/index.js",
+  "main": "web/index.js",
   "types": "src/index.ts",
   "scripts": {
     "start": "node dist/index.js",
@@ -60,7 +60,7 @@
       "@banka"
     ],
     "parserOptions": {
-      "project": "./tsconfig.json"
+      "project": "tsconfig.base.json"
     }
   },
   "license": "MIT",

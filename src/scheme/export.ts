@@ -8,7 +8,7 @@ import type {
 import { mixPalette } from "."
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const isInteractivePalette = (
+export const isInteractivePalette = (
   palette: Palette<any>
 ): palette is InteractivePalette<any> =>
   !Object.values(palette.attributes)[0].dry
@@ -30,7 +30,6 @@ const createCssProperty = (key: string, value: string, gen = 0) =>
   indent(1 + gen, `${key}: ${value};\n`)
 
 export const paletteToScssDeclarationStatic = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   palette: NonInteractivePalette<any>,
   generation: number
 ): string => {
@@ -42,7 +41,6 @@ export const paletteToScssDeclarationStatic = (
 }
 
 export const paletteToScssDeclarationInteractive = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   palette: InteractivePalette<any>,
   gen: number
 ): string => {
@@ -78,14 +76,12 @@ export const paletteToScssDeclaration = <T extends Scheme>(
     : paletteToScssDeclarationStatic(palette, generation)
 
 export const nestChildRules = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   palette: Palette<any>,
   generation: number
 ): string => {
   let nestedRules = ``
   if (palette.children) {
     for (const child of Object.entries(palette.children)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const [selector, childPalette] = child as [CssSelector, Palette<any>]
       nestedRules += paletteToScssRule(selector, childPalette, generation + 1)
     }
@@ -95,7 +91,6 @@ export const nestChildRules = (
 
 export const paletteToScssRule = (
   selector: CssSelector,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   palette: Palette<any>,
   generation = 0
 ): string => {

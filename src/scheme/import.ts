@@ -126,7 +126,7 @@ export const mixPaletteInteractive: MixPaletteInteractive = (scheme, parent) => 
   return palette
 }
 
-const isInteractiveScheme = (scheme: Scheme): scheme is InteractiveScheme =>
+export const isInteractiveScheme = (scheme: Scheme): scheme is InteractiveScheme =>
   !Array.isArray(Object.values(scheme.attributes)[0])
 
 type MixPalette = <S extends Scheme>(
