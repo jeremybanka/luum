@@ -55,14 +55,6 @@
     "javascript",
     "library"
   ],
-  "eslintConfig": {
-    "extends": [
-      "@banka"
-    ],
-    "parserOptions": {
-      "project": "tsconfig.base.json"
-    }
-  },
   "license": "MIT",
   "sideEffects": false,
   "author": "Jeremy Banka",

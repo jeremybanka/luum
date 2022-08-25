@@ -1,3 +1,280 @@
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
+var __commonJS = (cb, mod) => function __require() {
+  return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+var __reExport = (target, module, desc) => {
+  if (module && typeof module === "object" || typeof module === "function") {
+    for (let key of __getOwnPropNames(module))
+      if (!__hasOwnProp.call(target, key) && key !== "default")
+        __defProp(target, key, { get: () => module[key], enumerable: !(desc = __getOwnPropDesc(module, key)) || desc.enumerable });
+  }
+  return target;
+};
+var __toModule = (module) => {
+  return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", module && module.__esModule && "default" in module ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
+};
+
+// ../node_modules/fp-ts/lib/function.js
+var require_function = __commonJS({
+  "../node_modules/fp-ts/lib/function.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.getEndomorphismMonoid = exports.not = exports.SK = exports.hole = exports.pipe = exports.untupled = exports.tupled = exports.absurd = exports.decrement = exports.increment = exports.tuple = exports.flow = exports.flip = exports.constVoid = exports.constUndefined = exports.constNull = exports.constFalse = exports.constTrue = exports.constant = exports.unsafeCoerce = exports.identity = exports.apply = exports.getRing = exports.getSemiring = exports.getMonoid = exports.getSemigroup = exports.getBooleanAlgebra = void 0;
+    var getBooleanAlgebra = function(B) {
+      return function() {
+        return {
+          meet: function(x, y) {
+            return function(a) {
+              return B.meet(x(a), y(a));
+            };
+          },
+          join: function(x, y) {
+            return function(a) {
+              return B.join(x(a), y(a));
+            };
+          },
+          zero: function() {
+            return B.zero;
+          },
+          one: function() {
+            return B.one;
+          },
+          implies: function(x, y) {
+            return function(a) {
+              return B.implies(x(a), y(a));
+            };
+          },
+          not: function(x) {
+            return function(a) {
+              return B.not(x(a));
+            };
+          }
+        };
+      };
+    };
+    exports.getBooleanAlgebra = getBooleanAlgebra;
+    var getSemigroup = function(S) {
+      return function() {
+        return {
+          concat: function(f, g) {
+            return function(a) {
+              return S.concat(f(a), g(a));
+            };
+          }
+        };
+      };
+    };
+    exports.getSemigroup = getSemigroup;
+    var getMonoid = function(M) {
+      var getSemigroupM = exports.getSemigroup(M);
+      return function() {
+        return {
+          concat: getSemigroupM().concat,
+          empty: function() {
+            return M.empty;
+          }
+        };
+      };
+    };
+    exports.getMonoid = getMonoid;
+    var getSemiring = function(S) {
+      return {
+        add: function(f, g) {
+          return function(x) {
+            return S.add(f(x), g(x));
+          };
+        },
+        zero: function() {
+          return S.zero;
+        },
+        mul: function(f, g) {
+          return function(x) {
+            return S.mul(f(x), g(x));
+          };
+        },
+        one: function() {
+          return S.one;
+        }
+      };
+    };
+    exports.getSemiring = getSemiring;
+    var getRing = function(R) {
+      var S = exports.getSemiring(R);
+      return {
+        add: S.add,
+        mul: S.mul,
+        one: S.one,
+        zero: S.zero,
+        sub: function(f, g) {
+          return function(x) {
+            return R.sub(f(x), g(x));
+          };
+        }
+      };
+    };
+    exports.getRing = getRing;
+    var apply2 = function(a) {
+      return function(f) {
+        return f(a);
+      };
+    };
+    exports.apply = apply2;
+    function identity(a) {
+      return a;
+    }
+    exports.identity = identity;
+    exports.unsafeCoerce = identity;
+    function constant(a) {
+      return function() {
+        return a;
+      };
+    }
+    exports.constant = constant;
+    exports.constTrue = /* @__PURE__ */ constant(true);
+    exports.constFalse = /* @__PURE__ */ constant(false);
+    exports.constNull = /* @__PURE__ */ constant(null);
+    exports.constUndefined = /* @__PURE__ */ constant(void 0);
+    exports.constVoid = exports.constUndefined;
+    function flip(f) {
+      return function(b, a) {
+        return f(a, b);
+      };
+    }
+    exports.flip = flip;
+    function flow(ab, bc, cd, de, ef, fg, gh, hi, ij) {
+      switch (arguments.length) {
+        case 1:
+          return ab;
+        case 2:
+          return function() {
+            return bc(ab.apply(this, arguments));
+          };
+        case 3:
+          return function() {
+            return cd(bc(ab.apply(this, arguments)));
+          };
+        case 4:
+          return function() {
+            return de(cd(bc(ab.apply(this, arguments))));
+          };
+        case 5:
+          return function() {
+            return ef(de(cd(bc(ab.apply(this, arguments)))));
+          };
+        case 6:
+          return function() {
+            return fg(ef(de(cd(bc(ab.apply(this, arguments))))));
+          };
+        case 7:
+          return function() {
+            return gh(fg(ef(de(cd(bc(ab.apply(this, arguments)))))));
+          };
+        case 8:
+          return function() {
+            return hi(gh(fg(ef(de(cd(bc(ab.apply(this, arguments))))))));
+          };
+        case 9:
+          return function() {
+            return ij(hi(gh(fg(ef(de(cd(bc(ab.apply(this, arguments)))))))));
+          };
+      }
+      return;
+    }
+    exports.flow = flow;
+    function tuple() {
+      var t = [];
+      for (var _i = 0; _i < arguments.length; _i++) {
+        t[_i] = arguments[_i];
+      }
+      return t;
+    }
+    exports.tuple = tuple;
+    function increment(n) {
+      return n + 1;
+    }
+    exports.increment = increment;
+    function decrement(n) {
+      return n - 1;
+    }
+    exports.decrement = decrement;
+    function absurd(_) {
+      throw new Error("Called `absurd` function which should be uncallable");
+    }
+    exports.absurd = absurd;
+    function tupled(f) {
+      return function(a) {
+        return f.apply(void 0, a);
+      };
+    }
+    exports.tupled = tupled;
+    function untupled(f) {
+      return function() {
+        var a = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+          a[_i] = arguments[_i];
+        }
+        return f(a);
+      };
+    }
+    exports.untupled = untupled;
+    function pipe3(a, ab, bc, cd, de, ef, fg, gh, hi) {
+      switch (arguments.length) {
+        case 1:
+          return a;
+        case 2:
+          return ab(a);
+        case 3:
+          return bc(ab(a));
+        case 4:
+          return cd(bc(ab(a)));
+        case 5:
+          return de(cd(bc(ab(a))));
+        case 6:
+          return ef(de(cd(bc(ab(a)))));
+        case 7:
+          return fg(ef(de(cd(bc(ab(a))))));
+        case 8:
+          return gh(fg(ef(de(cd(bc(ab(a)))))));
+        case 9:
+          return hi(gh(fg(ef(de(cd(bc(ab(a))))))));
+        default:
+          var ret = arguments[0];
+          for (var i = 1; i < arguments.length; i++) {
+            ret = arguments[i](ret);
+          }
+          return ret;
+      }
+    }
+    exports.pipe = pipe3;
+    exports.hole = absurd;
+    var SK = function(_, b) {
+      return b;
+    };
+    exports.SK = SK;
+    function not(predicate) {
+      return function(a) {
+        return !predicate(a);
+      };
+    }
+    exports.not = not;
+    var getEndomorphismMonoid = function() {
+      return {
+        concat: function(first, second) {
+          return flow(first, second);
+        },
+        empty: identity
+      };
+    };
+    exports.getEndomorphismMonoid = getEndomorphismMonoid;
+  }
+});
+
 // src/constants/index.ts
 var HUE_STRUCTURES = {
   none: [],
@@ -426,220 +703,60 @@ var hexToSpec = (hex) => {
 };
 var hexToSpec_default = hexToSpec;
 
-// src/mixers/contrast.ts
-var contrast = (color, value) => {
-  const { lum } = color;
-  switch (value) {
-    case 0:
-      return { ...color, lum: lum > 0.666 ? 0 : 1 };
-    case 1:
-      return { ...color, lum: lum > 0.666 ? 0.05 : 0.95 };
-    case 2:
-      if (lum > 0.75) {
-        return { ...color, lum: lum / 2 };
-      } else if (lum < 0.25) {
-        return { ...color, lum: lum + (1 - lum) / 2 };
-      }
-      return { ...color, lum: lum > 0.666 ? 1 : 0 };
-  }
-};
-var contrast_default = contrast;
-
-// src/mixers/hue.ts
-var setHue = (color, value) => {
-  const newHue = value instanceof Function ? value(color.hue) : value;
-  return { ...color, hue: wrapAround_default(newHue, [0, 360]) };
-};
-var trine = (color, value) => setHue(color, (hue) => hue + value * 120);
-var tetra = (color, value) => setHue(color, (hue) => hue + value * 90);
-var split = (color, value) => setHue(color, (hue) => hue + value * 150);
+// src/scheme/index.ts
+var import_function2 = __toModule(require_function());
 
 // src/mixers/lum.ts
-var setLum = (color, value) => {
-  const newLum = value instanceof Function ? value(color.lum) : value;
-  return { ...color, lum: clamp_default(newLum, [0, 1]) };
-};
-var tint = (color, value) => setLum(color, (lum) => (lum * 100 + value) / 100);
-var shade = (color, value) => setLum(color, (lum) => (lum * 100 - value) / 100);
+var import_function = __toModule(require_function());
+var clampInto = ([min, max]) => (value) => value > max ? max : value < min ? min : value;
+var apply = (nextVersionOfThing) => (originalThing) => nextVersionOfThing instanceof Function ? nextVersionOfThing(originalThing) : nextVersionOfThing;
+var setLum = (newLum) => (currentColor) => ({
+  ...currentColor,
+  lum: (0, import_function.pipe)(currentColor.lum, apply(newLum), clampInto([0, 1]))
+});
+var shade = (shadeAmount) => (color) => setLum((lum) => (lum * 100 - shadeAmount) / 100)(color);
 
-// src/mixers/sat.ts
-var setSat = (color, value) => {
-  const newSat = value instanceof Function ? value(color.sat) : value;
-  return { ...color, sat: clamp_default(newSat, [0, 255]) };
-};
-var amp = (color, value) => setSat(color, (sat) => sat + value);
-var mute = (color, value) => setSat(color, (sat) => sat - value);
-
-// src/mixers/index.ts
-var mixers = {
-  hex: (color, value) => ({ ...color, ...hexToSpec_default(value) }),
-  spec: (_, value) => ({ ...value }),
-  hue: setHue,
-  sat: setSat,
-  lum: setLum,
-  fix: (color, prefer) => ({
-    ...color,
-    prefer,
-    ...specToHexFixLimit_default({ ...color, prefer }).fix
-  }),
-  prefer: (color, prefer) => ({ ...color, prefer }),
-  amp,
-  contrast: contrast_default,
-  mute,
-  tint,
-  shade,
-  split,
-  tetra,
-  trine
-};
-var mixers_default = mixers;
-
-// src/scheme/export.ts
-var isInteractivePalette = (palette) => !Object.values(palette.attributes)[0].dry;
-var indent = (indent2 = 1, text) => ` `.repeat(indent2 * 2) + text;
-var openCssRule = (gen = 0, ...selectors) => selectors.length > 1 ? selectors.reduce((acc, selector, idx) => {
-  const maybeComma = idx === 0 ? `` : `,`;
-  return `
-` + indent(gen, selector) + maybeComma + acc;
-}, ``) + ` {
-` : `${indent(gen, `${selectors[0]} {
-`)}`;
-var closeCssRule = (gen = 0) => `${indent(gen, `}
-`)}`;
-var createCssProperty = (key, value, gen = 0) => indent(1 + gen, `${key}: ${value};
-`);
-var paletteToScssDeclarationStatic = (palette, generation) => {
-  let scssDeclaration = ``;
-  for (const [attribute, { dry: hex }] of Object.entries(palette.attributes)) {
-    scssDeclaration += createCssProperty(attribute, hex, generation);
-  }
-  return scssDeclaration;
-};
-var paletteToScssDeclarationInteractive = (palette, gen) => {
-  let declaration = ``;
-  const stateDeclarations = {
-    hover: openCssRule(gen + 1, `&:hover`, `&:focus`, `&:focus-within`),
-    active: openCssRule(gen + 1, `&:active`, `&.active`),
-    disabled: openCssRule(gen + 1, `&:disabled`, `&.disabled`)
-  };
-  for (const [key, { base, hover, active, disabled }] of Object.entries(palette.attributes)) {
-    declaration += createCssProperty(key, base.dry, gen);
-    stateDeclarations.hover += createCssProperty(key, hover.dry, gen + 1);
-    stateDeclarations.active += createCssProperty(key, active.dry, gen + 1);
-    stateDeclarations.disabled += createCssProperty(key, disabled.dry, gen + 1);
-  }
-  stateDeclarations.hover += closeCssRule(gen + 1);
-  stateDeclarations.active += closeCssRule(gen + 1);
-  stateDeclarations.disabled += closeCssRule(gen + 1);
-  declaration += stateDeclarations.hover;
-  declaration += stateDeclarations.active;
-  declaration += stateDeclarations.disabled;
-  return declaration;
-};
-var paletteToScssDeclaration = (palette, generation) => isInteractivePalette(palette) ? paletteToScssDeclarationInteractive(palette, generation) : paletteToScssDeclarationStatic(palette, generation);
-var nestChildRules = (palette, generation) => {
-  let nestedRules = ``;
-  if (palette.children) {
-    for (const child of Object.entries(palette.children)) {
-      const [selector, childPalette] = child;
-      nestedRules += paletteToScssRule(selector, childPalette, generation + 1);
-    }
-  }
-  return nestedRules;
-};
-var paletteToScssRule = (selector, palette, generation = 0) => {
-  let scssBlock = openCssRule(generation, selector);
-  scssBlock += paletteToScssDeclaration(palette, generation);
-  scssBlock += nestChildRules(palette, generation);
-  scssBlock += closeCssRule(generation);
-  return scssBlock;
-};
-var schemeToScssRule = (selector, scheme) => {
-  const palette = mixPalette(scheme);
-  const scss = paletteToScssRule(selector, palette);
-  return scss;
-};
-
-// src/constants/spec.ts
-var defaultSpec = {
+// src/scheme/index.ts
+var RED = {
   hue: 0,
-  lum: 0,
-  sat: 0,
-  prefer: `lum`
+  sat: 100,
+  lum: 50,
+  prefer: `sat`
 };
-
-// src/utils/mapObject.ts
-var mapObject = (obj, fn) => {
-  const newObj = {};
-  const entries = Object.entries(obj);
-  entries.forEach(([key, val]) => {
-    newObj[key] = fn(val, key);
-  });
-  return newObj;
+var PAINT_MY_WAGON_RED = {
+  rootSelectors: [`.wagon`],
+  root: RED,
+  attributes: [`background-color`, shade(5)],
+  states: [[`:hover`, [`background-color`, shade(10)]]]
 };
-var mapObject_default = mapObject;
-
-// src/scheme/import.ts
-var isInteractiveSwatch = (swatch) => {
-  if (swatch === void 0)
-    return false;
-  return Boolean(swatch.base);
+var unknownToMany = (noneOneOrMany) => noneOneOrMany === void 0 || noneOneOrMany === null ? [] : Array.isArray(noneOneOrMany) ? noneOneOrMany : [noneOneOrMany];
+var LF = `
+`;
+var join = (separator) => (a) => a.join(separator);
+var map = (f) => (a) => a.map(f);
+var luumToCss = (rule) => {
+  const {
+    rootSelectors: unknownRootSelectors,
+    root,
+    attributes: oneOrManyAttributes,
+    filter
+  } = rule;
+  const rootSelectors = (0, import_function2.pipe)(unknownRootSelectors, unknownToMany, join(`, ` + LF), (s) => s ? s + ` {` + LF : ``);
+  const attributes = (0, import_function2.pipe)(oneOrManyAttributes, unknownToMany, map(([oneOrManyKeys, oneOrManyTransformers]) => {
+    const transformers = unknownToMany(oneOrManyTransformers);
+    console.log(transformers);
+    const transformedSpec = transformers.reduce((acc, transformer) => transformer(acc), root);
+    const hex = specToHex_default(transformedSpec, filter);
+    return (0, import_function2.pipe)(oneOrManyKeys, unknownToMany, map((key) => `${key}: ${hex}`), join(`; ` + LF));
+  }), join(`; ` + LF));
+  return rootSelectors ? join(LF)([rootSelectors, attributes, `}`]) : attributes;
 };
-var mixNewSpec = (spec, mix) => mix.reduce((currentColor, [name, value]) => {
-  const mixer = mixers_default[name];
-  return mixer(currentColor, value);
-}, spec);
-var mixNewSwatch = (spec, mix, filter) => {
-  const wet = mixNewSpec(spec, mix);
-  const dry = specToHex_default(wet, filter);
-  return { wet, dry };
-};
-var mixPaletteStatic = (scheme, parent) => {
-  const filter = scheme.filter || parent?.filter || unfiltered;
-  const rootSpec = mixNewSpec(defaultSpec, scheme.root || []);
-  const paletteAttributes = mapObject_default(scheme.attributes, (mix, key) => {
-    const parentAttribute = parent?.attributes[key];
-    const startingPoint = isInteractiveSwatch(parentAttribute) ? parentAttribute.base.wet : parentAttribute?.wet || rootSpec;
-    console.log(parentAttribute);
-    console.log(startingPoint);
-    return mixNewSwatch(startingPoint, mix, filter);
-  });
-  const palette = {
-    attributes: paletteAttributes
-  };
-  if (scheme.children) {
-    palette.children = mapObject_default(scheme.children, (child) => mixPalette(child, { filter, attributes: paletteAttributes }));
-  }
-  return palette;
-};
-var mixPaletteInteractive = (scheme, parent) => {
-  const filter = scheme.filter || parent?.filter || unfiltered;
-  const rootSpec = mixNewSpec(defaultSpec, scheme.root || []);
-  const baseSwatches = mapObject_default(scheme.attributes, (attribute, key) => {
-    const parentAttribute = parent?.attributes[key];
-    const startingPoint = isInteractiveSwatch(parentAttribute) ? parentAttribute.base.wet : parentAttribute?.wet || rootSpec;
-    return mixNewSwatch(startingPoint, attribute.base, filter);
-  });
-  const paletteAttributes = mapObject_default(scheme.attributes, (attribute, attributeKey) => mapObject_default(attribute, (state, stateKey) => {
-    if (stateKey === `base`) {
-      return baseSwatches[attributeKey];
-    }
-    return mixNewSwatch(baseSwatches[attributeKey].wet, state, filter);
-  }));
-  const palette = {
-    attributes: paletteAttributes
-  };
-  if (scheme.children) {
-    palette.children = mapObject_default(scheme.children, (child) => mixPalette(child, { filter, attributes: paletteAttributes }));
-  }
-  return palette;
-};
-var isInteractiveScheme = (scheme) => !Array.isArray(Object.values(scheme.attributes)[0]);
-var mixPalette = (scheme, parent) => isInteractiveScheme(scheme) ? mixPaletteInteractive(scheme, parent) : mixPaletteStatic(scheme, parent);
 export {
   CHANNEL_SPECIFIC_LUM,
   CMYK,
   HUE_STRUCTURES,
+  PAINT_MY_WAGON_RED,
+  RED,
   UI,
   channelsToSpec_default as channelsToSpec,
   clamp_default as clamp,
@@ -649,30 +766,18 @@ export {
   hueToRelativeChannels_default as hueToRelativeChannels,
   identifyHue,
   interpolate_default as interpolate,
-  isInteractivePalette,
-  isInteractiveScheme,
-  isInteractiveSwatch,
   lumFromChannels_default as lumFromChannels,
+  luumToCss,
   maxSatForHueInFilter_default as maxSatForHueInFilter,
-  mixNewSpec,
-  mixNewSwatch,
-  mixPalette,
-  mixPaletteInteractive,
-  mixPaletteStatic,
-  nestChildRules,
   normalizeHex_default as normalizeHex,
-  paletteToScssDeclaration,
-  paletteToScssDeclarationInteractive,
-  paletteToScssDeclarationStatic,
-  paletteToScssRule,
   palettes,
   satFromChannels_default as satFromChannels,
-  schemeToScssRule,
   specToHex_default as specToHex,
   specToHexFixLimit_default as specToHexFixLimit,
   specificLumFromHue_default as specificLumFromHue,
   trifactory,
   unfiltered,
+  unknownToMany,
   wrapAround_default as wrapAround
 };
 //# sourceMappingURL=index.js.map

@@ -1,242 +1,452 @@
-import type { Filter, Hex, LuumSpec } from "~"
+import { pipe } from "fp-ts/lib/function"
 
-import type { Mix } from "~/mixers"
+import { specToHex } from "~"
+import type { Filter, LuumSpec, FilterPoint } from "~"
 
-export type InteractiveStates = `active` | `base` | `disabled` | `hover`
+import { defaultSpec } from "~/constants/spec"
+import type { Transformer } from "~/mixers/lum"
+import { shade } from "~/mixers/lum"
 
-export type HTMLElementName =
-  | `a`
-  | `abbr`
-  | `address`
-  | `area`
-  | `article`
-  | `aside`
-  | `audio`
-  | `b`
-  | `base`
-  | `bdi`
-  | `bdo`
-  | `big`
-  | `blockquote`
-  | `body`
-  | `br`
-  | `button`
-  | `canvas`
-  | `caption`
-  | `cite`
-  | `code`
-  | `col`
-  | `colgroup`
-  | `data`
-  | `datalist`
-  | `dd`
-  | `del`
-  | `details`
-  | `dfn`
-  | `dialog`
-  | `div`
-  | `dl`
-  | `dt`
-  | `em`
-  | `embed`
-  | `fieldset`
-  | `figcaption`
-  | `figure`
-  | `footer`
-  | `form`
-  | `h1`
-  | `h2`
-  | `h3`
-  | `h4`
-  | `h5`
-  | `h6`
-  | `head`
-  | `header`
-  | `hgroup`
-  | `hr`
-  | `html`
-  | `i`
-  | `iframe`
-  | `img`
-  | `input`
-  | `ins`
-  | `kbd`
-  | `keygen`
-  | `label`
-  | `legend`
-  | `li`
-  | `link`
-  | `main`
-  | `map`
-  | `mark`
-  | `menu`
-  | `menuitem`
-  | `meta`
-  | `meter`
-  | `nav`
-  | `noscript`
-  | `object`
-  | `ol`
-  | `optgroup`
-  | `option`
-  | `output`
-  | `p`
-  | `param`
-  | `picture`
-  | `pre`
-  | `progress`
-  | `q`
-  | `rp`
-  | `rt`
-  | `ruby`
-  | `s`
-  | `samp`
-  | `script`
-  | `section`
-  | `select`
-  | `small`
-  | `source`
-  | `span`
-  | `strong`
-  | `style`
-  | `sub`
-  | `summary`
-  | `sup`
-  | `table`
-  | `tbody`
-  | `td`
-  | `textarea`
-  | `tfoot`
-  | `th`
-  | `thead`
-  | `time`
-  | `title`
-  | `tr`
-  | `track`
-  | `u`
-  | `ul`
-  | `var`
-  | `video`
-  | `wbr`
+// export * from "./export"
+// export * from "./import"
 
-export type CssSelector =
-  | HTMLElementName
-  | `.${string}`
-  | `* ${string}`
-  | `*`
-  | `&::${`after` | `before`}`
-  | `&:${`active` | `disabled` | `focus-within` | `focus` | `hover`}`
-  | `&.${string}`
-  | `&[type=${string}]`
-  | `&#${string}`
-  | `#${string}`
-  | `+ ${string}`
-  | `> ${string}`
-  | `~ ${string}`
-  | `${HTMLElementName} ${HTMLElementName}`
-  | `${HTMLElementName}::${`after` | `before`}`
-  | `${HTMLElementName}::${`first-letter` | `first-line`}`
-  | `${HTMLElementName}::${`selection`}`
-  | `${HTMLElementName}.${string}`
-  | `${HTMLElementName}#${string}`
-  | `input[type="${string}"]`
+/* eslint-disable max-lines */
 
-export type CssColorPropertyKeys =
-  | `--color-${string}`
-  | `background-color`
-  | `background`
-  | `border-bottom-color`
-  | `border-color`
-  | `border-left-color`
-  | `border-right-color`
-  | `border-top-color`
-  | `border`
-  | `box-shadow`
-  | `caret-color`
-  | `color`
-  | `column-rule-color`
-  | `column-rule`
-  | `filter`
-  | `opacity`
-  | `outline-color`
-  | `outline`
-  | `text-decoration-color`
-  | `text-decoration`
-  | `text-shadow`
+// export type InteractiveStates = `active` | `base` | `disabled` | `hover`
 
-export type InteractiveMix = Record<InteractiveStates, Mix>
+// export const HTML_ELEMENT_NAMES = [
+//   `a`,
+//   `abbr`,
+//   `address`,
+//   `area`,
+//   `article`,
+//   `aside`,
+//   `audio`,
+//   `b`,
+//   `base`,
+//   `bdi`,
+//   `bdo`,
+//   `big`,
+//   `blockquote`,
+//   `body`,
+//   `br`,
+//   `button`,
+//   `canvas`,
+//   `caption`,
+//   `cite`,
+//   `code`,
+//   `col`,
+//   `colgroup`,
+//   `data`,
+//   `datalist`,
+//   `dd`,
+//   `del`,
+//   `details`,
+//   `dfn`,
+//   `dialog`,
+//   `div`,
+//   `dl`,
+//   `dt`,
+//   `em`,
+//   `embed`,
+//   `fieldset`,
+//   `figcaption`,
+//   `figure`,
+//   `footer`,
+//   `form`,
+//   `h1`,
+//   `h2`,
+//   `h3`,
+//   `h4`,
+//   `h5`,
+//   `h6`,
+//   `head`,
+//   `header`,
+//   `hgroup`,
+//   `hr`,
+//   `html`,
+//   `i`,
+//   `iframe`,
+//   `img`,
+//   `input`,
+//   `ins`,
+//   `kbd`,
+//   `keygen`,
+//   `label`,
+//   `legend`,
+//   `li`,
+//   `link`,
+//   `main`,
+//   `map`,
+//   `mark`,
+//   `menu`,
+//   `menuitem`,
+//   `meta`,
+//   `meter`,
+//   `nav`,
+//   `noscript`,
+//   `object`,
+//   `ol`,
+//   `optgroup`,
+//   `option`,
+//   `output`,
+//   `p`,
+//   `param`,
+//   `picture`,
+//   `pre`,
+//   `progress`,
+//   `q`,
+//   `rp`,
+//   `rt`,
+//   `ruby`,
+//   `s`,
+//   `samp`,
+//   `script`,
+//   `section`,
+//   `select`,
+//   `small`,
+//   `source`,
+//   `span`,
+//   `strong`,
+//   `style`,
+//   `sub`,
+//   `summary`,
+//   `sup`,
+//   `table`,
+//   `tbody`,
+//   `td`,
+//   `textarea`,
+//   `tfoot`,
+//   `th`,
+//   `thead`,
+//   `time`,
+//   `title`,
+//   `tr`,
+//   `track`,
+//   `u`,
+//   `ul`,
+//   `var`,
+//   `video`,
+//   `wbr`,
+// ] as const
 
-export type InteractiveSwatch = Record<InteractiveStates, Swatch>
+// export type HTMLElementName = typeof HTML_ELEMENT_NAMES[number]
 
-export type InteractiveScheme = {
-  root?: Mix
-  filter?: Filter
-  attributes: Partial<Record<CssColorPropertyKeys, InteractiveMix>>
-  children?: Record<string, InteractiveScheme>
-}
+// export type UniversalSelector = `*`
 
-export type NonInteractiveScheme = {
-  root?: Mix
-  filter?: Filter
-  attributes: Partial<Record<CssColorPropertyKeys, Mix>>
-  children?: Record<string, Scheme>
-}
+// export type TypeSelector = HTMLElementName | `body` | `html`
 
-export type Scheme = InteractiveScheme | NonInteractiveScheme
+// export type ClassSelector = `.${string}`
 
-export type Swatch = { wet: LuumSpec; dry: Hex }
+// export type IdSelector = `#${string}`
 
-export type NonInteractivePalette<S extends NonInteractiveScheme> = {
-  attributes: {
-    [K in keyof S[`attributes`]]: Swatch
+// export type ParentSelector = `&`
+
+// export type AttributeSelector = `["${string}"="${string}"]`
+
+// export type CssSelectorCore =
+//   | AttributeSelector
+//   | ClassSelector
+//   | IdSelector
+//   | ParentSelector
+//   | TypeSelector
+//   | UniversalSelector
+
+// export type CssCombinator = ` ` | ` + ` | ` > ` | ` ~ `
+
+export const CSS_PSEUDO_CLASSES = [
+  `:active`,
+  `:checked`,
+  `:disabled`,
+  `:enabled`,
+  `:focus`,
+  `:hover`,
+  `:indeterminate`,
+  `:visited`,
+] as const
+
+export type CssPseudoClass = typeof CSS_PSEUDO_CLASSES[number]
+
+export const isCssPseudoClass = (s: unknown): s is CssPseudoClass =>
+  CSS_PSEUDO_CLASSES.includes(s as CssPseudoClass)
+
+// export type CssPseudoElement =
+//   | `::after`
+//   | `::backdrop`
+//   | `::before`
+//   | `::first-letter`
+//   | `::first-line`
+//   | `::placeholder`
+//   | `::selection`
+
+// export type CssSelectorExtension =
+//   | AttributeSelector
+//   | ClassSelector
+//   | CssPseudoClass
+//   | CssPseudoElement
+//   | `${CssCombinator}${CssSelectorCore}`
+
+// export type CssSelector =
+//   | CssSelectorCore
+//   | `${CssSelectorCore}${CssSelectorExtension}`
+
+export const CSS_COLOR_PROPERTY_KEYS = [
+  `background-color`,
+  `background`,
+  `border-bottom-color`,
+  `border-color`,
+  `border-left-color`,
+  `border-right-color`,
+  `border-top-color`,
+  `border`,
+  `box-shadow`,
+  `caret-color`,
+  `color`,
+  `column-rule-color`,
+  `column-rule`,
+  `filter`,
+  `opacity`,
+  `outline-color`,
+  `outline`,
+  `text-decoration-color`,
+  `text-decoration`,
+  `text-shadow`,
+] as const
+
+export type CssColorPropertyKey =
+  | typeof CSS_COLOR_PROPERTY_KEYS[number]
+  | `--${string}`
+
+export const isCssColorPropertyKey = (
+  input: unknown
+): input is CssColorPropertyKey =>
+  typeof input === `string` &&
+  (CSS_COLOR_PROPERTY_KEYS.includes(
+    input as typeof CSS_COLOR_PROPERTY_KEYS[number]
+  ) ||
+    input.startsWith(`--`))
+
+export type Validator<T> = (input: unknown) => input is T
+
+export const isString = (input: unknown): input is string =>
+  typeof input === `string`
+
+export const isUndefined = (input: unknown): input is undefined =>
+  typeof input === `undefined`
+
+export const isArrayWhereEveryElement =
+  <T>(isType: Validator<T>) =>
+  (input: unknown): input is T[] =>
+    Array.isArray(input) && input.every((item) => isType(item))
+
+export const content =
+  <T>(isType: Validator<T>) =>
+  (input: unknown): input is T | T[] =>
+    isType(input) || isArrayWhereEveryElement(isType)(input)
+
+export const maybeIsOrContainsOnly =
+  <T>(isType: Validator<T>) =>
+  (input: unknown): input is T | T[] | undefined =>
+    isUndefined(input) || content(isType)(input)
+
+export type OneOrMany<T> = T | T[]
+
+export const isTransformer =
+  <T>(validate: Validator<T>) =>
+  (sample: T): Validator<Transformer<T>> => {
+    const sampleIsValid = validate(sample)
+    if (!sampleIsValid) {
+      throw new Error(`Invalid test case: JSON.stringify(${sample})`)
+    }
+    return (input: unknown): input is Transformer<T> => {
+      if (typeof input !== `function`) return false
+      const testResult = input(sample)
+      return validate(testResult)
+    }
   }
-  children?: S[`children`] extends undefined
-    ? undefined
-    : {
-        [K in keyof S[`children`]]: S[`children`][K] extends NonInteractiveScheme
-          ? NonInteractivePalette<S[`children`][K]>
-          : S[`children`][K] extends InteractiveScheme
-          ? InteractivePalette<S[`children`][K]>
-          : never
-      }
+
+export const isFilterPoint = (input: unknown): input is FilterPoint =>
+  typeof input === `object` &&
+  typeof (input as FilterPoint).hue === `number` &&
+  typeof (input as FilterPoint).sat === `number`
+
+export const isFilter = (input: unknown): input is Filter =>
+  isArrayWhereEveryElement(isFilterPoint)(input)
+
+export const maybe =
+  <T>(validate: Validator<T>) =>
+  (input: unknown): input is T | undefined =>
+    isUndefined(input) || validate(input)
+
+export const isLuumSpec = (input: unknown): input is LuumSpec =>
+  typeof input === `object` &&
+  input !== null &&
+  typeof (input as LuumSpec).hue === `number` &&
+  typeof (input as LuumSpec).sat === `number` &&
+  typeof (input as LuumSpec).lum === `number` &&
+  [`sat`, `lum`].includes((input as LuumSpec).prefer)
+
+export const isLuumSpecTransformer = isTransformer(isLuumSpec)(defaultSpec)
+
+export type LuumCssAttribute = [
+  keys: OneOrMany<CssColorPropertyKey>,
+  transformers: OneOrMany<Transformer<LuumSpec>>
+]
+export const isLuumCssAttribute = (input: unknown): input is LuumCssAttribute =>
+  Array.isArray(input) &&
+  input.length === 2 &&
+  content(isCssColorPropertyKey)(input[0]) &&
+  content(isLuumSpecTransformer)(input[1])
+
+export type LuumScssPseudoClassRule = [
+  selectors: OneOrMany<CssPseudoClass>,
+  attributes: OneOrMany<LuumCssAttribute>
+]
+
+export const isLuumScssPseudoClassRule = (
+  input: unknown
+): input is LuumScssPseudoClassRule =>
+  input instanceof Array &&
+  input.length === 2 &&
+  content(isCssPseudoClass)(input[0]) &&
+  content(isLuumCssAttribute)(input[1])
+
+export type LuumScssNestedRule = [
+  selectors: OneOrMany<string>,
+  attributes: OneOrMany<LuumCssAttribute>
+]
+
+export const isLuumScssNestedRule = (
+  input: unknown
+): input is LuumScssNestedRule =>
+  input instanceof Array &&
+  input.length === 2 &&
+  content(isString)(input[0]) &&
+  content(isLuumCssAttribute)(input[1])
+
+export type LuumCssRule = {
+  rootSelectors?: OneOrMany<string>
+  root: LuumSpec
+  attributes: OneOrMany<LuumCssAttribute>
+  filter?: Filter
 }
 
-export type InteractivePalette<S extends InteractiveScheme> = {
-  attributes: {
-    [K in keyof S[`attributes`]]: InteractiveSwatch
-  }
-  children?: S[`children`] extends undefined
-    ? undefined
-    : {
-        [K in keyof S[`children`]]: S[`children`][K] extends InteractiveScheme
-          ? InteractivePalette<S[`children`][K]>
-          : never
-      }
+export const key =
+  <T = any>(k: keyof T) =>
+  (obj: Exclude<object, null>): unknown =>
+    (obj as Record<keyof any, any>)[k]
+
+export const isLuumCssRule = (input: unknown): input is LuumCssRule =>
+  typeof input === `object` &&
+  input !== null &&
+  isLuumSpec((input as LuumCssRule).root) &&
+  content(isLuumCssAttribute)(key<LuumCssRule>(`attributes`)(input)) &&
+  maybe(content(isString))(key<LuumCssRule>(`rootSelectors`)(input)) &&
+  maybe(isFilter)(key<LuumCssRule>(`filter`)(input))
+
+export type LuumScssRule = LuumCssRule & {
+  states?: OneOrMany<LuumScssPseudoClassRule>
+  children?: OneOrMany<LuumScssNestedRule>
 }
 
-export type Palette<S extends Scheme> = S extends NonInteractiveScheme
-  ? NonInteractivePalette<S>
-  : S extends InteractiveScheme
-  ? InteractivePalette<S>
-  : never
+export const isLuumScssRule = (input: unknown): input is LuumScssRule =>
+  isLuumCssRule(input) &&
+  maybe(content(isLuumScssPseudoClassRule))(
+    key<LuumScssRule>(`states`)(input)
+  ) &&
+  maybe(content(isLuumScssNestedRule))(key<LuumScssRule>(`children`)(input))
 
-export interface FileScheme extends NonInteractiveScheme {
-  file?: string
-  root: Mix
+export const RED: LuumSpec = {
+  hue: 0,
+  sat: 255,
+  lum: 50,
+  prefer: `sat`,
 }
 
-export interface FilePalette<S extends FileScheme>
-  extends NonInteractivePalette<S> {
-  file: S[`file`] extends undefined ? undefined : string
+export const PAINT_MY_WAGON_RED: LuumScssRule = {
+  rootSelectors: [`.wagon`],
+  root: RED,
+  attributes: [`background-color`, shade(5)],
+  states: [
+    [
+      [`:hover`, `:focus`],
+      [`background-color`, shade(10)],
+    ],
+    [`:active`, [`background-color`, shade(15)]],
+  ],
 }
 
-// export default function paletteToScss(arg): string {
-//   const { scheme = UI, filter = CMYK } =
-//     typeof arg === `string` ? { hex: arg } : arg
-//   const palette = paintScheme(scheme)
-//   const scss = paletteToScssBlock(palette, filter)
-//   return scss
+export const eachArrayElement =
+  <T>(isType: Validator<T>) =>
+  (input: unknown): T[] =>
+    isType(input) ? [input] : Array.isArray(input) ? input.filter(isType) : []
+
+const LF = `\n`
+
+const join = (separator?: string) => (a: string[]) => a.join(separator)
+const map =
+  <I, O>(f: (input: I) => O) =>
+  (a: I[]) =>
+    a.map(f)
+
+export const luumToCss = (rule: LuumCssRule): string => {
+  const {
+    attributes: oneOrManyAttributes,
+    root,
+    rootSelectors: maybeOneOrManyRootSelectors,
+    filter: maybeFilter,
+  } = rule
+  const rootSelectors = pipe(
+    maybeOneOrManyRootSelectors,
+    eachArrayElement(isString),
+    join(`, ` + LF),
+    (s) => (s ? s + ` {` + LF : ``)
+  )
+  const attributes = pipe(
+    oneOrManyAttributes,
+    eachArrayElement(isLuumCssAttribute),
+    map(([oneOrManyKeys, oneOrManyTransformers]) => {
+      const transformers = eachArrayElement(isLuumSpecTransformer)(
+        oneOrManyTransformers
+      )
+      console.log(transformers)
+      const transformedSpec = transformers.reduce(
+        (acc, transformer) => transformer(acc),
+        root
+      )
+      const hex = specToHex(transformedSpec, maybeFilter)
+      return pipe(
+        oneOrManyKeys,
+        eachArrayElement(isCssColorPropertyKey),
+        map((key) => `${key}: ${hex}`),
+        join(`; ` + LF)
+      )
+    }),
+    join(`; ` + LF)
+  )
+  return rootSelectors ? join(LF)([rootSelectors, attributes, `}`]) : attributes
+}
+
+export const luumToScss = (rule: LuumScssRule): string => {
+  const {
+    rootSelectors: maybeOneOrManyRootSelectors,
+    root,
+    attributes: oneOrManyAttributes,
+    filter,
+    states: maybeOneOrManyStates,
+    children: maybeOneOrManyChildren,
+  } = rule
+  const rootSelectors = pipe(
+    maybeOneOrManyRootSelectors,
+    eachArrayElement(isString),
+    join(`, ` + LF)
+  )
+}
+
+// export const luumToScss = (rule: LuumScssRule): string => {
+//   const { rootSelector, root, filter, attributes, states, children } = rule
+//   let scss = ``
+//   const depth = 0
+//   if (rootSelector) scss += `${rootSelector} {`
+//   return ``
 // }
-
-export * from "./export"
-export * from "./import"
