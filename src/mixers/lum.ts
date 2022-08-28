@@ -25,10 +25,14 @@ export type LuumApplicator<X> = Applicator<X, LuumSpec>
 
 export type SetLum = LuumApplicator<number>
 
-export const setLum: SetLum = (newLum) => (currentColor) => ({
-  ...currentColor,
-  lum: pipe(currentColor.lum, apply(newLum), clampInto([0, 1])),
-})
+export const setLum: SetLum = (newLum) => (currentColor) => {
+  const newColor = {
+    ...currentColor,
+    lum: pipe(currentColor.lum, apply(newLum), clampInto([0, 1])),
+  }
+  console.log(newColor)
+  return newColor
+}
 
 export type TransformerCreator<X, Y> = (seed: X) => Transformer<Y>
 

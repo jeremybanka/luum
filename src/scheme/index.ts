@@ -359,9 +359,38 @@ export const isLuumScssRule = (input: unknown): input is LuumScssRule =>
 export const RED: LuumSpec = {
   hue: 0,
   sat: 255,
-  lum: 50,
+  lum: 0.5,
   prefer: `sat`,
 }
+
+export const WAYFORGE_CORE_COLOR_NAMES = [
+  `Red`,
+  `Orange`,
+  `Yellow`,
+  `Lime`,
+  `Green`,
+  `Teal`,
+  `Cyan`,
+  `Blue`,
+  `Indigo`,
+  `Violet`,
+  `Magenta`,
+  `Pink`,
+] as const
+
+export type WayforgeCoreColorName = typeof WAYFORGE_CORE_COLOR_NAMES[number]
+
+export const WAYFORGE_CORE_COLORS: Readonly<
+  Record<WayforgeCoreColorName, LuumSpec>
+> = WAYFORGE_CORE_COLOR_NAMES.reduce((acc, name, idx) => {
+  acc[name] = {
+    hue: idx * 30,
+    sat: 255,
+    lum: 0.5,
+    prefer: `sat`,
+  }
+  return acc
+}, {} as Record<WayforgeCoreColorName, LuumSpec>)
 
 export const PAINT_MY_WAGON_RED: LuumScssRule = {
   rootSelectors: [`.wagon`],
@@ -409,7 +438,6 @@ export const luumToCss = (rule: LuumCssRule): string => {
       const transformers = eachArrayElement(isLuumSpecTransformer)(
         oneOrManyTransformers
       )
-      console.log(transformers)
       const transformedSpec = transformers.reduce(
         (acc, transformer) => transformer(acc),
         root
@@ -441,6 +469,7 @@ export const luumToScss = (rule: LuumScssRule): string => {
     eachArrayElement(isString),
     join(`, ` + LF)
   )
+  return ``
 }
 
 // export const luumToScss = (rule: LuumScssRule): string => {

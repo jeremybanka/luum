@@ -10,9 +10,9 @@ var __commonJS = (cb, mod) => function __require() {
 };
 var __reExport = (target, module, desc) => {
   if (module && typeof module === "object" || typeof module === "function") {
-    for (let key of __getOwnPropNames(module))
-      if (!__hasOwnProp.call(target, key) && key !== "default")
-        __defProp(target, key, { get: () => module[key], enumerable: !(desc = __getOwnPropDesc(module, key)) || desc.enumerable });
+    for (let key2 of __getOwnPropNames(module))
+      if (!__hasOwnProp.call(target, key2) && key2 !== "default")
+        __defProp(target, key2, { get: () => module[key2], enumerable: !(desc = __getOwnPropDesc(module, key2)) || desc.enumerable });
   }
   return target;
 };
@@ -706,6 +706,14 @@ var hexToSpec_default = hexToSpec;
 // src/scheme/index.ts
 var import_function2 = __toModule(require_function());
 
+// src/constants/spec.ts
+var defaultSpec = {
+  hue: 0,
+  lum: 0,
+  sat: 0,
+  prefer: `lum`
+};
+
 // src/mixers/lum.ts
 var import_function = __toModule(require_function());
 var clampInto = ([min, max]) => (value) => value > max ? max : value < min ? min : value;
@@ -717,9 +725,71 @@ var setLum = (newLum) => (currentColor) => ({
 var shade = (shadeAmount) => (color) => setLum((lum) => (lum * 100 - shadeAmount) / 100)(color);
 
 // src/scheme/index.ts
+var CSS_PSEUDO_CLASSES = [
+  `:active`,
+  `:checked`,
+  `:disabled`,
+  `:enabled`,
+  `:focus`,
+  `:hover`,
+  `:indeterminate`,
+  `:visited`
+];
+var isCssPseudoClass = (s) => CSS_PSEUDO_CLASSES.includes(s);
+var CSS_COLOR_PROPERTY_KEYS = [
+  `background-color`,
+  `background`,
+  `border-bottom-color`,
+  `border-color`,
+  `border-left-color`,
+  `border-right-color`,
+  `border-top-color`,
+  `border`,
+  `box-shadow`,
+  `caret-color`,
+  `color`,
+  `column-rule-color`,
+  `column-rule`,
+  `filter`,
+  `opacity`,
+  `outline-color`,
+  `outline`,
+  `text-decoration-color`,
+  `text-decoration`,
+  `text-shadow`
+];
+var isCssColorPropertyKey = (input) => typeof input === `string` && (CSS_COLOR_PROPERTY_KEYS.includes(input) || input.startsWith(`--`));
+var isString = (input) => typeof input === `string`;
+var isUndefined = (input) => typeof input === `undefined`;
+var isArrayWhereEveryElement = (isType) => (input) => Array.isArray(input) && input.every((item) => isType(item));
+var content = (isType) => (input) => isType(input) || isArrayWhereEveryElement(isType)(input);
+var maybeIsOrContainsOnly = (isType) => (input) => isUndefined(input) || content(isType)(input);
+var isTransformer = (validate) => (sample) => {
+  const sampleIsValid = validate(sample);
+  if (!sampleIsValid) {
+    throw new Error(`Invalid test case: JSON.stringify(${sample})`);
+  }
+  return (input) => {
+    if (typeof input !== `function`)
+      return false;
+    const testResult = input(sample);
+    return validate(testResult);
+  };
+};
+var isFilterPoint = (input) => typeof input === `object` && typeof input.hue === `number` && typeof input.sat === `number`;
+var isFilter = (input) => isArrayWhereEveryElement(isFilterPoint)(input);
+var maybe = (validate) => (input) => isUndefined(input) || validate(input);
+var isLuumSpec = (input) => typeof input === `object` && input !== null && typeof input.hue === `number` && typeof input.sat === `number` && typeof input.lum === `number` && [`sat`, `lum`].includes(input.prefer);
+var isLuumSpecTransformer = isTransformer(isLuumSpec)(defaultSpec);
+var isLuumCssAttribute = (input) => Array.isArray(input) && input.length === 2 && content(isCssColorPropertyKey)(input[0]) && content(isLuumSpecTransformer)(input[1]);
+var isLuumScssPseudoClassRule = (input) => input instanceof Array && input.length === 2 && content(isCssPseudoClass)(input[0]) && content(isLuumCssAttribute)(input[1]);
+var isLuumScssNestedRule = (input) => input instanceof Array && input.length === 2 && content(isString)(input[0]) && content(isLuumCssAttribute)(input[1]);
+var key = (k) => (obj) => obj[k];
+var isLuumCssRule = (input) => typeof input === `object` && input !== null && isLuumSpec(input.root) && content(isLuumCssAttribute)(key(`attributes`)(input)) && maybe(content(isString))(key(`rootSelectors`)(input)) && maybe(isFilter)(key(`filter`)(input));
+var isLuumScssRule = (input) => isLuumCssRule(input) && maybe(content(isLuumScssPseudoClassRule))(key(`states`)(input)) && maybe(content(isLuumScssNestedRule))(key(`children`)(input));
 var RED = {
   hue: 0,
-  sat: 100,
+  sat: 255,
   lum: 50,
   prefer: `sat`
 };
@@ -727,48 +797,88 @@ var PAINT_MY_WAGON_RED = {
   rootSelectors: [`.wagon`],
   root: RED,
   attributes: [`background-color`, shade(5)],
-  states: [[`:hover`, [`background-color`, shade(10)]]]
+  states: [
+    [
+      [`:hover`, `:focus`],
+      [`background-color`, shade(10)]
+    ],
+    [`:active`, [`background-color`, shade(15)]]
+  ]
 };
-var unknownToMany = (noneOneOrMany) => noneOneOrMany === void 0 || noneOneOrMany === null ? [] : Array.isArray(noneOneOrMany) ? noneOneOrMany : [noneOneOrMany];
+var eachArrayElement = (isType) => (input) => isType(input) ? [input] : Array.isArray(input) ? input.filter(isType) : [];
 var LF = `
 `;
 var join = (separator) => (a) => a.join(separator);
 var map = (f) => (a) => a.map(f);
 var luumToCss = (rule) => {
   const {
-    rootSelectors: unknownRootSelectors,
-    root,
     attributes: oneOrManyAttributes,
-    filter
+    root,
+    rootSelectors: maybeOneOrManyRootSelectors,
+    filter: maybeFilter
   } = rule;
-  const rootSelectors = (0, import_function2.pipe)(unknownRootSelectors, unknownToMany, join(`, ` + LF), (s) => s ? s + ` {` + LF : ``);
-  const attributes = (0, import_function2.pipe)(oneOrManyAttributes, unknownToMany, map(([oneOrManyKeys, oneOrManyTransformers]) => {
-    const transformers = unknownToMany(oneOrManyTransformers);
-    console.log(transformers);
+  const rootSelectors = (0, import_function2.pipe)(maybeOneOrManyRootSelectors, eachArrayElement(isString), join(`, ` + LF), (s) => s ? s + ` {` + LF : ``);
+  const attributes = (0, import_function2.pipe)(oneOrManyAttributes, eachArrayElement(isLuumCssAttribute), map(([oneOrManyKeys, oneOrManyTransformers]) => {
+    const transformers = eachArrayElement(isLuumSpecTransformer)(oneOrManyTransformers);
     const transformedSpec = transformers.reduce((acc, transformer) => transformer(acc), root);
-    const hex = specToHex_default(transformedSpec, filter);
-    return (0, import_function2.pipe)(oneOrManyKeys, unknownToMany, map((key) => `${key}: ${hex}`), join(`; ` + LF));
+    const hex = specToHex_default(transformedSpec, maybeFilter);
+    return (0, import_function2.pipe)(oneOrManyKeys, eachArrayElement(isCssColorPropertyKey), map((key2) => `${key2}: ${hex}`), join(`; ` + LF));
   }), join(`; ` + LF));
   return rootSelectors ? join(LF)([rootSelectors, attributes, `}`]) : attributes;
+};
+var luumToScss = (rule) => {
+  const {
+    rootSelectors: maybeOneOrManyRootSelectors,
+    root,
+    attributes: oneOrManyAttributes,
+    filter,
+    states: maybeOneOrManyStates,
+    children: maybeOneOrManyChildren
+  } = rule;
+  const rootSelectors = (0, import_function2.pipe)(maybeOneOrManyRootSelectors, eachArrayElement(isString), join(`, ` + LF));
+  return ``;
 };
 export {
   CHANNEL_SPECIFIC_LUM,
   CMYK,
+  CSS_COLOR_PROPERTY_KEYS,
+  CSS_PSEUDO_CLASSES,
   HUE_STRUCTURES,
   PAINT_MY_WAGON_RED,
   RED,
   UI,
   channelsToSpec_default as channelsToSpec,
   clamp_default as clamp,
+  content,
+  eachArrayElement,
   hexToChannels_default as hexToChannels,
   hexToSpec_default as hexToSpec,
   hueFromChannels_default as hueFromChannels,
   hueToRelativeChannels_default as hueToRelativeChannels,
   identifyHue,
   interpolate_default as interpolate,
+  isArrayWhereEveryElement,
+  isCssColorPropertyKey,
+  isCssPseudoClass,
+  isFilter,
+  isFilterPoint,
+  isLuumCssAttribute,
+  isLuumCssRule,
+  isLuumScssNestedRule,
+  isLuumScssPseudoClassRule,
+  isLuumScssRule,
+  isLuumSpec,
+  isLuumSpecTransformer,
+  isString,
+  isTransformer,
+  isUndefined,
+  key,
   lumFromChannels_default as lumFromChannels,
   luumToCss,
+  luumToScss,
   maxSatForHueInFilter_default as maxSatForHueInFilter,
+  maybe,
+  maybeIsOrContainsOnly,
   normalizeHex_default as normalizeHex,
   palettes,
   satFromChannels_default as satFromChannels,
@@ -777,7 +887,6 @@ export {
   specificLumFromHue_default as specificLumFromHue,
   trifactory,
   unfiltered,
-  unknownToMany,
   wrapAround_default as wrapAround
 };
 //# sourceMappingURL=index.js.map
